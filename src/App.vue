@@ -1,32 +1,43 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-main :style="{background: $vuetify.theme.themes[theme].background}">
+      <v-row no-gutters>
+        <v-col
+          cols="3"
+        >
+          <drawer/>
+        </v-col>
+        <v-col
+          cols="9"
+        >
+          <router-view/>
+        </v-col>
+      </v-row>
+    </v-main>
+  </v-app>
 </template>
 
+<script>
+import Drawer from './components/minor/NavBar.vue';
+
+export default {
+  name: 'App',
+
+  components: {
+    Drawer,
+  },
+  computed: {
+    theme() {
+      console.log(this.$vuetify.theme.dark);
+      return (this.$vuetify.theme.dark) ? 'dark' : 'light';
+    },
+  },
+  data: () => ({
+    //
+  }),
+};
+</script>
+
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
 </style>
