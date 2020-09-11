@@ -3,7 +3,7 @@
     <v-card class="card">
       <v-card-text>
         <data-table
-          title="Список НИР"
+          title="Список ОКР"
           :headers="headers"
           :items="items"
         />
@@ -16,7 +16,7 @@
 import DataTable from '../minor/DataTable.vue';
 
 export default {
-  name: 'ListNirPage',
+  name: 'ListOkrPage',
   data() {
     return {
       page: 1,
@@ -123,14 +123,13 @@ export default {
     DataTable,
   },
 };
-
 </script>
 
 <style scoped>
-.main-block {
-  padding: 2% 6% 0 0;
-}
-.card {
-  min-height: 860px;
-}
+  .main-block {
+    padding: 2% 6% 0 0;
+  }
+  .card {
+    min-height: 860px;
+  }
 </style>

@@ -2,7 +2,7 @@
   <div>
     <v-row>
       <v-col cols="4" style="display: flex; align-items: center">
-        <h2>Список НИР</h2>
+        <h2>{{title}}</h2>
         <v-btn x-small class="ml-2" color="primary">создать</v-btn>
       </v-col>
       <v-col cols="4">
@@ -52,6 +52,7 @@ import SelectComponent from './SelectComponent.vue';
 export default {
   name: 'DataTable',
   props: {
+    title: String,
     headers: Array,
     items: Array,
   },

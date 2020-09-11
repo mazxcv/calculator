@@ -71,7 +71,7 @@ export default {
         {
           title: 'Список ОКР',
           active: false,
-          to: '/1',
+          to: '/list-okr',
           items: [],
         },
         {

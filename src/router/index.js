@@ -15,6 +15,11 @@ const routes = [
     component: () => import('../components/pages/ListNirPage.vue'),
   },
   {
+    path: '/list-okr',
+    name: 'ListNirPage',
+    component: () => import('../components/pages/ListOkrPage.vue'),
+  },
+  {
     path: '/nir-innovation-properties',
     name: 'DirectoryNirPage',
     component: () => import('../components/pages/NirInnovationPropertiesPage.vue'),
