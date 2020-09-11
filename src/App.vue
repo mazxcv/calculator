@@ -4,11 +4,18 @@
       <v-row no-gutters>
         <v-col
           cols="3"
+          xl="3"
+          lg="3"
+          md="4"
         >
           <drawer/>
         </v-col>
         <v-col
+          class="pl-5"
           cols="9"
+          xl="9"
+          lg="9"
+          md="8"
         >
           <router-view/>
         </v-col>
@@ -28,7 +35,6 @@ export default {
   },
   computed: {
     theme() {
-      console.log(this.$vuetify.theme.dark);
       return (this.$vuetify.theme.dark) ? 'dark' : 'light';
     },
   },

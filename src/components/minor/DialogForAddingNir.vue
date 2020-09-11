@@ -116,7 +116,6 @@ export default {
   methods: {
     modList(item) {
       const index = this.listSelectedNir.findIndex((el) => el.id === item.id);
-      console.log(this.listSelectedNir);
       if (index >= 0) {
         this.listSelectedNir.splice(index, 1);
       } else {
