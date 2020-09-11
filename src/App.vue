@@ -1,25 +1,12 @@
 <template>
   <v-app>
     <v-main :style="{background: $vuetify.theme.themes[theme].background}">
-      <v-row no-gutters>
-        <v-col
-          cols="3"
-          xl="3"
-          lg="3"
-          md="4"
-        >
-          <drawer/>
-        </v-col>
-        <v-col
-          class="pl-5"
-          cols="9"
-          xl="9"
-          lg="9"
-          md="8"
-        >
+      <div style="display: flex">
+        <drawer style="min-width: 330px" class="hidden-sm-and-down"/>
+        <div style="width: 100%; padding: 1% 4%">
           <router-view/>
-        </v-col>
-      </v-row>
+        </div>
+      </div>
     </v-main>
   </v-app>
 </template>
@@ -39,7 +26,7 @@ export default {
     },
   },
   data: () => ({
-    //
+    drawer: true,
   }),
 };
 </script>

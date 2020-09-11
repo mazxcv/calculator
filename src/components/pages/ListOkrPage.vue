@@ -1,5 +1,5 @@
 <template>
-  <div class="main-block">
+  <div>
     <v-card class="card">
       <v-card-text>
         <data-table
@@ -126,9 +126,6 @@ export default {
 </script>
 
 <style scoped>
-  .main-block {
-    padding: 2% 6% 0 0;
-  }
   .card {
     min-height: 860px;
   }

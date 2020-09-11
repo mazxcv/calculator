@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="4" style="display: flex; align-items: center">
+      <v-col cols="6" style="display: flex; align-items: center">
         <h2>{{title}}</h2>
         <v-btn x-small class="ml-2" color="primary">создать</v-btn>
       </v-col>
@@ -17,7 +17,7 @@
           append-icon="mdi-magnify"
         ></v-text-field>
       </v-col>
-      <v-col cols="4">
+      <v-col cols="2">
         <select-component
           :items="['2', '5', '10', '25']"
           :init="itemsPerPage.toString()"
