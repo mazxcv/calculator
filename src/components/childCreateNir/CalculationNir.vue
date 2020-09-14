@@ -1,5 +1,5 @@
 <template>
-  <div class="main-container">
+  <div>
     <v-timeline dense >
       <v-timeline-item small v-for="(item, i) in stages" :key="i">
         <v-card class="elevation-2">
@@ -60,7 +60,7 @@
 import DialogForAddingNir from '../minor/DialogForAddingNir.vue';
 
 export default {
-  name: 'CalculationPage',
+  name: 'CalculationNir',
   data() {
     return {
       fullListNir: [
@@ -109,7 +109,7 @@ export default {
       ],
       stages: [
         {
-          title: 'Stage',
+          title: 'Этап',
           list: [],
         },
       ],
@@ -117,7 +117,7 @@ export default {
   },
   methods: {
     addStage() {
-      this.stages = [...this.stages, { title: 'Stage', list: [] }];
+      this.stages = [...this.stages, { title: 'Этап', list: [] }];
     },
     addList(list, stageIndex) {
       console.log(list);

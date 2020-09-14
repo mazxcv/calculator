@@ -7,7 +7,7 @@
       outlined
       @click.stop="dialog = true"
     >
-      add nir
+      добаваить работу
     </v-btn>
 
     <v-dialog

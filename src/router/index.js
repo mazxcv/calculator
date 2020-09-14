@@ -5,9 +5,9 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: () => import('../components/pages/CalculationPage.vue'),
+    path: '/create',
+    name: 'CreateNirPage',
+    component: () => import('../components/pages/CreateNirPage.vue'),
   },
   {
     path: '/list-nir',

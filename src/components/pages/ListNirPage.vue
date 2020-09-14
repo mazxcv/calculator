@@ -6,6 +6,7 @@
           title="Список НИР"
           :headers="headers"
           :items="NIR_LIST"
+          createLink="/create"
         />
       </v-card-text>
     </v-card>

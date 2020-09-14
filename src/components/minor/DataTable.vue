@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="6" style="display: flex; align-items: center">
         <h2>{{title}}</h2>
-        <v-btn x-small class="ml-2" color="primary">создать</v-btn>
+        <v-btn :to="createLink" x-small class="ml-2" color="primary">создать</v-btn>
       </v-col>
       <v-col cols="4">
         <v-text-field
@@ -55,6 +55,7 @@ export default {
     title: String,
     headers: Array,
     items: Array,
+    createLink: String,
   },
   data() {
     return {
