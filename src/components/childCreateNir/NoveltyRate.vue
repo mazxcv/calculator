@@ -1,76 +1,70 @@
 <template>
-  <div style="width: 100%">
-    <v-card>
-      <!--<v-card-text>-->
-        <!--<v-row>-->
-          <!--<v-col class="cell" cols="1">№ п/п</v-col>-->
-          <!--<v-col class="cell" cols="3">Характеристика новизны</v-col>-->
-          <!--<v-col class="cell" cols="8">dddd</v-col>-->
-
-          <!--<v-col class="cell" cols="1">1</v-col>-->
-          <!--<v-col class="cell" cols="3">Работа в развитии предшевтсвующей</v-col>-->
-          <!--<v-col class="cell" cols="8">dddd</v-col>-->
-
-          <!--<v-col class="cell" cols="1">2</v-col>-->
-          <!--<v-col class="cell" cols="3">Работа с известным аналогом</v-col>-->
-          <!--<v-col class="cell" cols="8">dddd</v-col>-->
-
-          <!--<v-col class="cell" cols="1">3</v-col>-->
-          <!--<v-col class="cell" cols="3">Работа, не имеющая известных аналогов</v-col>-->
-          <!--<v-col class="cell" cols="8">dddd</v-col>-->
-        <!--</v-row>-->
-      <!--</v-card-text>-->
-      <v-card-text>
-        <v-row>
-          <v-col cols="3">
-            <v-row>
-              <v-col class="header center border-left border-top" cols="12">
-                Характеристика новизны
-              </v-col>
-              <v-col class="cell border-left" cols="12">
-                Работа в развитии предшевтсвующей
-              </v-col>
-              <v-col class="cell border-left" cols="12">
-                Работа с известным аналогом
-              </v-col>
-              <v-col class="cell border-left" cols="12">
-                Работа, не имеющая известных аналогов
-              </v-col>
-            </v-row>
-          </v-col>
-          <v-col cols="9">
-            <v-row>
-              <v-col class="cell center border-top" cols="12">
-                Коффициент новизны Кн НИР
-              </v-col>
-              <v-col class="cell center" cols="4">
-                Фундоментальная НИР
-              </v-col>
-              <v-col class="cell center" cols="4">
-                Прикладная НИР, без создания ЭО или макета
-              </v-col>
-              <v-col class="cell center" cols="4">
-                Прикладная НИР, с разработкой и изготовлением ЭО или макета
-              </v-col>
-              <v-col
-                class="cell center"
-                v-for="(item, i) in arr" :key="i"
-                cols="4"
-              >
-                <v-btn
-                  @click="message(item)"
-                  color="primary"
-                  style="height: 100%; width: 100%"
-                  text
-                >
-                  {{item}}
-                </v-btn>
-              </v-col>
-            </v-row>
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
+  <div class="mb-5" style="width: 100%">
+    <v-expansion-panels>
+      <v-expansion-panel>
+        <v-expansion-panel-header>
+          <div style="display: flex; align-items: center">
+            Коффициент новизны Кн НИР
+            <v-icon color="warning" class="ml-2">mdi-alert-circle</v-icon>
+          </div>
+        </v-expansion-panel-header>
+        <v-expansion-panel-content>
+          <v-card elevation="0">
+            <v-card-text>
+              <v-row>
+                <v-col cols="3">
+                  <v-row>
+                    <v-col class="header center border-left border-top" cols="12">
+                      Характеристика новизны
+                    </v-col>
+                    <v-col class="cell border-left" cols="12">
+                      Работа в развитии предшевтсвующей
+                    </v-col>
+                    <v-col class="cell border-left" cols="12">
+                      Работа с известным аналогом
+                    </v-col>
+                    <v-col class="cell border-left" cols="12">
+                      Работа, не имеющая известных аналогов
+                    </v-col>
+                  </v-row>
+                </v-col>
+                <v-col cols="9">
+                  <v-row>
+                    <v-col class="cell center border-top" cols="12">
+                      Коффициент новизны Кн НИР
+                    </v-col>
+                    <v-col class="cell center" cols="4">
+                      Фундоментальная НИР
+                    </v-col>
+                    <v-col class="cell center" cols="4">
+                      Прикладная НИР, без создания ЭО или макета
+                    </v-col>
+                    <v-col class="cell center" cols="4">
+                      Прикладная НИР, с разработкой и изготовлением ЭО или макета
+                    </v-col>
+                    <v-col
+                      class="cell center"
+                      v-for="(item, i) in arr" :key="i"
+                      cols="4"
+                    >
+                      <v-btn
+                        @click="message(item)"
+                        active
+                        color="primary"
+                        style="height: 100%; width: 100%"
+                        text
+                      >
+                        {{item}}
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
   </div>
 </template>
 

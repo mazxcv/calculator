@@ -4,14 +4,22 @@
       <v-timeline-item small v-for="(item, i) in stages" :key="i">
         <v-card class="elevation-2">
           <v-card-title style="display: flex; justify-content: space-between">
-            <div style="display: flex; ">
+            <div style="display: flex; align-items: center">
               {{ `${item.title} ${i + 1}`}}
-              <dialog-for-adding-nir
-                :fullListNir="fullListNir"
-                :listSelectedNir="item.list"
-                :addList="addList"
+              <dialog-add-works
+                title="добавить работу"
+                :fullList="listLabor"
+                :listSelected="item.list"
                 :stageIndex="i"
               />
+              <div>
+                <dialog-add-works
+                  title="добавить группу работ"
+                  :fullList="fullListGroups"
+                  :listSelected="item.list"
+                  :stageIndex="i"
+                />
+              </div>
             </div>
             <v-btn v-if="i === stages.length - 1 & i !== 0" icon @click="deleteStage">
               <v-icon>mdi-close</v-icon>
@@ -22,13 +30,34 @@
               <template v-slot:default>
                 <thead>
                 <tr>
-                  <th class="text-left">text</th>
-                  <th class="text-left">actions</th>
+                  <th class="text-left">Виды работ</th>
+                  <th style="width: 20%" class="text-left">Трудоемкость</th>
+                  <th class="text-left">Действия</th>
                 </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(el, j) in item.list" :key="j">
-                    <td>{{ el.text }}</td>
+                    <td >{{ el.name }}</td>
+                    <td style="display: flex; align-items: center">
+                      <v-slider
+                        style="width: 80%"
+                        :step="el.step"
+                        tick-size="3"
+                        ticks="always"
+                        :min="el.minVolume"
+                        :max="el.maxVolume"
+                        dense
+                        single-line
+                        hide-details
+                        thumb-label
+                        v-model="stages[i].list[j].volume"
+                      >
+                        <template v-slot:thumb-label="{ value }">
+                          {{ value.toFixed(3) }}
+                        </template>
+                      </v-slider>
+                      <div class="pl-1" style="width: 20%">{{el.volume.toFixed(2)}}</div>
+                    </td>
                     <td>
                       <v-btn @click="deleteElementList(i, el.id)" icon x-small color="error">
                         <v-icon>mdi-close</v-icon>
@@ -43,9 +72,8 @@
               style="display: flex; justify-content: center; font-size: 24px"
               class="ma-3"
             >
-              select nir
+              Добавьте работы
             </div>
-            <!--<li v-for="(el, i) in item.list" :key="i">{{ el.text }}</li>-->
           </v-card-text>
         </v-card>
       </v-timeline-item>
@@ -57,51 +85,82 @@
 </template>
 
 <script>
-import DialogForAddingNir from '../minor/DialogForAddingNir.vue';
+import DialogAddWorks from '../minor/DialogAddWorks.vue';
 
 export default {
   name: 'CalculationNir',
+  props: {
+    listLabor: Array,
+  },
   data() {
     return {
-      fullListNir: [
+      fullListGroups: [
+        {
+          id: 6,
+          text: 'group1',
+          type: 'group',
+          works: [
+            {
+              id: 11,
+              text: '42 Lorem ipsum dolor sit amet, consectetur adipisicing elit. At dicta eaque '
+              + 'iste odio quasi reprehenderit voluptatibus. Adipisci cum dolor incidunt '
+              + 'laudantium officiis, porro repudiandae tenetur?',
+            },
+          ],
+        },
+        {
+          id: 7,
+          text: 'group2',
+          type: 'group',
+          works: [
+            {
+              id: 12,
+              text: '34 Lorem ipsum dolor sit amet, consectetur adipisicing elit. At dicta eaque '
+              + 'iste odio quasi reprehenderit voluptatibus. Adipisci cum dolor incidunt '
+              + 'laudantium officiis, porro repudiandae tenetur?',
+            },
+          ],
+        },
+      ],
+      fullListWorks: [
         {
           id: 0,
-          type: 'nir1',
+          laborIntensity: 0.5,
           text: '1 Lorem ipsum dolor sit amet, consectetur adipisicing elit. At dicta eaque '
           + 'iste odio quasi reprehenderit voluptatibus. Adipisci cum dolor incidunt '
           + 'laudantium officiis, porro repudiandae tenetur?',
         },
         {
           id: 1,
-          type: 'nir1',
+          laborIntensity: 0.5,
           text: '2 Lorem ipsum dolor sit amet, consectetur adipisicing elit. At dicta eaque '
           + 'iste odio quasi reprehenderit voluptatibus. Adipisci cum dolor incidunt '
           + 'laudantium officiis, porro repudiandae tenetur?',
         },
         {
           id: 2,
-          type: 'nir1',
+          laborIntensity: 0.5,
           text: '3 Lorem ipsum dolor sit amet, consectetur adipisicing elit. At dicta eaque '
           + 'iste odio quasi reprehenderit voluptatibus. Adipisci cum dolor incidunt '
           + 'laudantium officiis, porro repudiandae tenetur?',
         },
         {
           id: 3,
-          type: 'nir2',
+          laborIntensity: 0.5,
           text: '4 Lorem ipsum dolor sit amet, consectetur adipisicing elit. At dicta eaque '
           + 'iste odio quasi reprehenderit voluptatibus. Adipisci cum dolor incidunt '
           + 'laudantium officiis, porro repudiandae tenetur?',
         },
         {
           id: 4,
-          type: 'nir2',
+          laborIntensity: 0.5,
           text: '5 Lorem ipsum dolor sit amet, consectetur adipisicing elit. At dicta eaque '
           + 'iste odio quasi reprehenderit voluptatibus. Adipisci cum dolor incidunt '
           + 'laudantium officiis, porro repudiandae tenetur?',
         },
         {
           id: 5,
-          type: 'nir2',
+          laborIntensity: 0.5,
           text: '6 Lorem ipsum dolor sit amet, consectetur adipisicing elit. At dicta eaque '
           + 'iste odio quasi reprehenderit voluptatibus. Adipisci cum dolor incidunt '
           + 'laudantium officiis, porro repudiandae tenetur?',
@@ -119,22 +178,16 @@ export default {
     addStage() {
       this.stages = [...this.stages, { title: 'Этап', list: [] }];
     },
-    addList(list, stageIndex) {
-      console.log(list);
-      console.log(stageIndex);
-      this.stages[stageIndex].list = list;
-    },
     deleteStage() {
       this.stages.pop();
     },
     deleteElementList(stageId, elementId) {
       const index = this.stages[stageId].list.findIndex((el) => el.id === elementId);
-      console.log(index);
       this.stages[stageId].list.splice(index, 1);
     },
   },
   components: {
-    DialogForAddingNir,
+    DialogAddWorks,
   },
 };
 </script>
