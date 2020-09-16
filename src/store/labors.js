@@ -15,6 +15,7 @@ export default {
         ...el,
         step: (el.maxVolume - el.minVolume) / 10,
         volume: el.maxVolume - (((el.maxVolume - el.minVolume) / 10) * 2),
+        overMax: el.maxVolume + (((el.maxVolume - el.minVolume) / 10) * 3),
       }));
     },
   },

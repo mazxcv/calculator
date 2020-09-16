@@ -8,7 +8,7 @@
               {{ `${item.title} ${i + 1}`}}
               <dialog-add-works
                 title="добавить работу"
-                :fullList="listLabor"
+                :fullList="[...listLabor]"
                 :listSelected="item.list"
                 :stageIndex="i"
               />
@@ -45,7 +45,9 @@
                         tick-size="3"
                         ticks="always"
                         :min="el.minVolume"
-                        :max="el.maxVolume"
+                        :max="el.overMax"
+                        :color="colorSlider(el.maxVolume, stages[i].list[j].volume)"
+                        track-color="grey"
                         dense
                         single-line
                         hide-details
@@ -122,50 +124,6 @@ export default {
           ],
         },
       ],
-      fullListWorks: [
-        {
-          id: 0,
-          laborIntensity: 0.5,
-          text: '1 Lorem ipsum dolor sit amet, consectetur adipisicing elit. At dicta eaque '
-          + 'iste odio quasi reprehenderit voluptatibus. Adipisci cum dolor incidunt '
-          + 'laudantium officiis, porro repudiandae tenetur?',
-        },
-        {
-          id: 1,
-          laborIntensity: 0.5,
-          text: '2 Lorem ipsum dolor sit amet, consectetur adipisicing elit. At dicta eaque '
-          + 'iste odio quasi reprehenderit voluptatibus. Adipisci cum dolor incidunt '
-          + 'laudantium officiis, porro repudiandae tenetur?',
-        },
-        {
-          id: 2,
-          laborIntensity: 0.5,
-          text: '3 Lorem ipsum dolor sit amet, consectetur adipisicing elit. At dicta eaque '
-          + 'iste odio quasi reprehenderit voluptatibus. Adipisci cum dolor incidunt '
-          + 'laudantium officiis, porro repudiandae tenetur?',
-        },
-        {
-          id: 3,
-          laborIntensity: 0.5,
-          text: '4 Lorem ipsum dolor sit amet, consectetur adipisicing elit. At dicta eaque '
-          + 'iste odio quasi reprehenderit voluptatibus. Adipisci cum dolor incidunt '
-          + 'laudantium officiis, porro repudiandae tenetur?',
-        },
-        {
-          id: 4,
-          laborIntensity: 0.5,
-          text: '5 Lorem ipsum dolor sit amet, consectetur adipisicing elit. At dicta eaque '
-          + 'iste odio quasi reprehenderit voluptatibus. Adipisci cum dolor incidunt '
-          + 'laudantium officiis, porro repudiandae tenetur?',
-        },
-        {
-          id: 5,
-          laborIntensity: 0.5,
-          text: '6 Lorem ipsum dolor sit amet, consectetur adipisicing elit. At dicta eaque '
-          + 'iste odio quasi reprehenderit voluptatibus. Adipisci cum dolor incidunt '
-          + 'laudantium officiis, porro repudiandae tenetur?',
-        },
-      ],
       stages: [
         {
           title: 'Этап',
@@ -175,6 +133,9 @@ export default {
     };
   },
   methods: {
+    colorSlider(maxValue, value) {
+      return value > maxValue ? 'error' : 'primary';
+    },
     addStage() {
       this.stages = [...this.stages, { title: 'Этап', list: [] }];
     },
