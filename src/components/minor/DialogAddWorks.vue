@@ -12,10 +12,10 @@
 
     <v-dialog
       v-model="dialog"
-      max-width="600"
+      max-width="800"
     >
       <v-card>
-        <v-card-text>
+        <v-card-text class="card-text">
           <v-list>
             <v-list-item-group color="primary">
               <v-list-item
@@ -43,9 +43,16 @@
           <v-btn
             color="primary"
             text
+            @click="saveList"
+          >
+            Добавить работы
+          </v-btn>
+          <v-btn
+            color="primary"
+            text
             @click="dialog = false"
           >
-            Close
+            Отмена
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -67,6 +74,7 @@ export default {
     listSelected: Array,
     stageIndex: Number,
     title: String,
+    addList: Function,
   },
   computed: {
     checkboxes() {
@@ -75,6 +83,13 @@ export default {
     },
   },
   methods: {
+    saveList() {
+      this.addList(this.stageIndex, this.listSelected.map((el) => ({
+        ...el,
+        stageIndex: this.stageIndex,
+      })));
+      this.dialog = false;
+    },
     modList(item) {
       const index = this.listSelected.findIndex((el) => el.id === item.id);
       if (index >= 0) {
@@ -88,5 +103,8 @@ export default {
 </script>
 
 <style scoped>
-
+.card-text  {
+  max-height: 800px;
+  overflow-y: auto;
+}
 </style>

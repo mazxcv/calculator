@@ -8,9 +8,10 @@
               {{ `${item.title} ${i + 1}`}}
               <dialog-add-works
                 title="добавить работу"
-                :fullList="[...listLabor]"
-                :listSelected="item.list"
+                :fullList="listLabor"
+                :listSelected="[...item.list]"
                 :stageIndex="i"
+                :addList="addListLabor"
               />
               <div>
                 <dialog-add-works
@@ -46,13 +47,13 @@
                         ticks="always"
                         :min="el.minVolume"
                         :max="el.overMax"
-                        :color="colorSlider(el.maxVolume, stages[i].list[j].volume)"
+                        :color="colorSlider(el.maxVolume, item.list[j].volume)"
                         track-color="grey"
                         dense
                         single-line
                         hide-details
                         thumb-label
-                        v-model="stages[i].list[j].volume"
+                        v-model="item.list[j].volume"
                       >
                         <template v-slot:thumb-label="{ value }">
                           {{ value.toFixed(3) }}
@@ -124,6 +125,16 @@ export default {
           ],
         },
       ],
+      testList: [
+        {
+          maxVolume: 0.01,
+          minVolume: 0.02,
+          step: 0.001,
+          volume: 0.017,
+          overMax: 0.023,
+          name: 'Выборка рекомендаций по использованию результатов НИР',
+        },
+      ],
       stages: [
         {
           title: 'Этап',
@@ -138,6 +149,9 @@ export default {
     },
     addStage() {
       this.stages = [...this.stages, { title: 'Этап', list: [] }];
+    },
+    addListLabor(index, list) {
+      this.stages[index].list = list;
     },
     deleteStage() {
       this.stages.pop();
