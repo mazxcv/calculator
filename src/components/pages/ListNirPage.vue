@@ -7,6 +7,7 @@
           :headers="headers"
           :items="NIR_LIST"
           createLink="/create"
+          dialogCreate="DialogCreateNir"
         />
       </v-card-text>
     </v-card>

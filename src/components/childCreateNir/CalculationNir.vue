@@ -5,22 +5,25 @@
         <v-card class="elevation-2">
           <v-card-title style="display: flex; justify-content: space-between">
             <div style="display: flex; align-items: center">
-              {{ `${item.title} ${i + 1}`}}
+              <div>{{ `${item.title} ${i + 1}`}}</div>
               <dialog-add-works
-                title="добавить работу"
+                class="ml-2 mb-1"
+                title="добавить работы"
                 :fullList="listLabor"
                 :listSelected="[...item.list]"
                 :stageIndex="i"
                 :addList="addListLabor"
               />
               <div>
-                <dialog-add-works
-                  title="добавить группу работ"
+                <dialog-add-groups
+                  title="добавить группы работ"
                   :fullList="fullListGroups"
-                  :listSelected="item.list"
+                  :listSelected="[...item.groups]"
                   :stageIndex="i"
+                  :addList="addListGroup"
                 />
               </div>
+              <v-btn class="ml-2" color="primary" :disabled="!valid" x-small>сохранить</v-btn>
             </div>
             <v-btn v-if="i === stages.length - 1 & i !== 0" icon @click="deleteStage">
               <v-icon>mdi-close</v-icon>
@@ -31,7 +34,7 @@
               <template v-slot:default>
                 <thead>
                 <tr>
-                  <th class="text-left">Виды работ</th>
+                  <th style="width: 75%" class="text-left">Виды работ</th>
                   <th style="width: 20%" class="text-left">Трудоемкость</th>
                   <th class="text-left">Действия</th>
                 </tr>
@@ -77,6 +80,63 @@
             >
               Добавьте работы
             </div>
+            <h4 v-if="item.groups[0]" class="mt-5">Группы работ:</h4>
+            <v-expansion-panels
+              flat
+              multiple
+              hover
+              accordion
+              focusable
+            >
+              <v-expansion-panel v-for="(group, j) in item.groups" :key="j">
+                <v-expansion-panel-header>
+                  <div>
+                    <div style="display: flex" class="mb-2">
+                      <dialog-add-works
+                        :activeClass="false"
+                        title="добавить работы"
+                        :fullList="group.works"
+                        :listSelected="[...item.groups[j].list]"
+                        :stageIndex="i"
+                        :groupIndex="j"
+                        :addList="addListLaborToGroup"
+                      />
+                      <v-btn
+                        @click.stop="deleteGroup(i, group.id)"
+                        class="ml-2"
+                        x-small
+                        outlined
+                        color="error"
+                      >
+                        Удалить группу
+                      </v-btn>
+                    </div>
+                    {{group.name}}
+                  </div>
+                </v-expansion-panel-header>
+                <v-expansion-panel-content>
+                  <v-simple-table>
+                    <template>
+                      <thead>
+                      <tr>
+                        <th style="width: 75%" class="text-left">Виды работ</th>
+                        <th style="width: 20%" class="text-left">Трудоемкость</th>
+                        <th class="text-left">Действия</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr v-for="(labor, key) in group.list" :key="key">
+                        <td >{{labor.name}}</td>
+                        <td >test1</td>
+                        <td >test2</td>
+                      </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table>
+                </v-expansion-panel-content>
+                <v-divider v-if="j !== item.groups.length - 1"/>
+              </v-expansion-panel>
+            </v-expansion-panels>
           </v-card-text>
         </v-card>
       </v-timeline-item>
@@ -89,6 +149,7 @@
 
 <script>
 import DialogAddWorks from '../minor/DialogAddWorks.vue';
+import DialogAddGroups from '../minor/DialogAddGroups.vue';
 
 export default {
   name: 'CalculationNir',
@@ -97,15 +158,16 @@ export default {
   },
   data() {
     return {
+      valid: true,
       fullListGroups: [
         {
           id: 6,
-          text: 'group1',
-          type: 'group',
+          name: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus rereg',
+          list: [],
           works: [
             {
               id: 11,
-              text: '42 Lorem ipsum dolor sit amet, consectetur adipisicing elit. At dicta eaque '
+              name: '42 Lorem ipsum dolor sit amet, consectetur adipisicing elit. At dicta eaque '
               + 'iste odio quasi reprehenderit voluptatibus. Adipisci cum dolor incidunt '
               + 'laudantium officiis, porro repudiandae tenetur?',
             },
@@ -113,12 +175,12 @@ export default {
         },
         {
           id: 7,
-          text: 'group2',
-          type: 'group',
+          name: 'Lorem ipsum dolor sit amet',
+          list: [],
           works: [
             {
               id: 12,
-              text: '34 Lorem ipsum dolor sit amet, consectetur adipisicing elit. At dicta eaque '
+              name: '34 Lorem ipsum dolor sit amet, consectetur adipisicing elit. At dicta eaque '
               + 'iste odio quasi reprehenderit voluptatibus. Adipisci cum dolor incidunt '
               + 'laudantium officiis, porro repudiandae tenetur?',
             },
@@ -139,6 +201,7 @@ export default {
         {
           title: 'Этап',
           list: [],
+          groups: [],
         },
       ],
     };
@@ -148,13 +211,25 @@ export default {
       return value > maxValue ? 'error' : 'primary';
     },
     addStage() {
-      this.stages = [...this.stages, { title: 'Этап', list: [] }];
+      this.stages = [...this.stages, { title: 'Этап', list: [], groups: [] }];
     },
     addListLabor(index, list) {
       this.stages[index].list = list;
     },
+    addListLaborToGroup(indexStage, indexGroup, list) {
+      this.stages[indexStage].groups[indexGroup].list = list;
+    },
+    addListGroup(index, groups) {
+      this.stages[index].groups = groups;
+    },
     deleteStage() {
       this.stages.pop();
+    },
+    deleteGroup(indexStage, idGroup) {
+      console.log(indexStage);
+      console.log(idGroup);
+      this.stages[indexStage].groups = this.stages[indexStage].groups
+        .filter((el) => el.id !== idGroup);
     },
     deleteElementList(stageId, elementId) {
       const index = this.stages[stageId].list.findIndex((el) => el.id === elementId);
@@ -163,6 +238,7 @@ export default {
   },
   components: {
     DialogAddWorks,
+    DialogAddGroups,
   },
 };
 </script>

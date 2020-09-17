@@ -2,7 +2,6 @@
   <div>
     <v-btn
       x-small
-      class="ml-2 mb-1"
       color="primary"
       outlined
       @click.stop="dialog = true"
@@ -72,6 +71,7 @@ export default {
   props: {
     fullList: Array,
     listSelected: Array,
+    groupIndex: Number,
     stageIndex: Number,
     title: String,
     addList: Function,
@@ -84,10 +84,17 @@ export default {
   },
   methods: {
     saveList() {
-      this.addList(this.stageIndex, this.listSelected.map((el) => ({
-        ...el,
-        stageIndex: this.stageIndex,
-      })));
+      if (this.groupIndex === undefined) {
+        this.addList(this.stageIndex, this.listSelected.map((el) => ({
+          ...el,
+          stageIndex: this.stageIndex,
+        })));
+      } else {
+        this.addList(this.stageIndex, this.groupIndex, this.listSelected.map((el) => ({
+          ...el,
+          stageIndex: this.stageIndex,
+        })));
+      }
       this.dialog = false;
     },
     modList(item) {

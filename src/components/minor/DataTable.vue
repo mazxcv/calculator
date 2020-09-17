@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="6" style="display: flex; align-items: center">
         <h2>{{title}}</h2>
-        <v-btn :to="createLink" x-small class="ml-2" color="primary">создать</v-btn>
+        <div :is="dialogCreate"></div>
       </v-col>
       <v-col cols="4">
         <v-text-field
@@ -48,6 +48,7 @@
 <script>
 import Pagination from './Pagination.vue';
 import SelectComponent from './SelectComponent.vue';
+import DialogCreateNir from './DialogCreateNir.vue';
 
 export default {
   name: 'DataTable',
@@ -56,6 +57,7 @@ export default {
     headers: Array,
     items: Array,
     createLink: String,
+    dialogCreate: String,
   },
   data() {
     return {
@@ -68,6 +70,7 @@ export default {
   components: {
     Pagination,
     SelectComponent,
+    DialogCreateNir,
   },
   methods: {
     changePage(newPage) {

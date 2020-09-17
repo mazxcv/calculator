@@ -7,44 +7,52 @@
       outlined
       @click.stop="dialog = true"
     >
-      добавить группу работ
+      {{title}}
     </v-btn>
 
     <v-dialog
       v-model="dialog"
-      max-width="600"
+      max-width="800"
     >
       <v-card>
-        <v-card-text>
+        <v-card-text class="card-text">
           <v-list>
             <v-list-item-group color="primary">
               <v-list-item
-                v-for="(item, i) in groups"
+                v-for="(item, i) in fullList"
                 :key="i"
               >
                 <v-list-item-content>
                   <div style="display: flex; align-items: center">
                     <v-checkbox
-                      v-model="checkboxesNir[i]"
+                      v-model="checkboxes[i]"
                       @click="modList(item)"
                       class="ml-2 mr-2"
                       dense
                     ></v-checkbox>
-                    {{ item.text }}
+                    {{ item.name }}
                   </div>
                 </v-list-item-content>
               </v-list-item>
             </v-list-item-group>
           </v-list>
         </v-card-text>
+
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn
             color="primary"
             text
+            @click="saveList"
+          >
+            Добавить работы
+          </v-btn>
+          <v-btn
+            color="primary"
+            text
             @click="dialog = false"
           >
-            Close
+            Отмена
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -54,13 +62,49 @@
 
 <script>
 export default {
-  name: 'DialogAddGroups',
+  name: 'DialogAddGroup',
+  data() {
+    return {
+      dialog: false,
+      items: [],
+    };
+  },
   props: {
-    groups: Array,
+    fullList: Array,
+    listSelected: Array,
+    stageIndex: Number,
+    title: String,
+    addList: Function,
+  },
+  computed: {
+    checkboxes() {
+      return this.fullList
+        .map((el) => this.listSelected.find((selected) => selected.id === el.id));
+    },
+  },
+  methods: {
+    saveList() {
+      this.addList(this.stageIndex, this.listSelected.map((el) => ({
+        ...el,
+        stageIndex: this.stageIndex,
+      })));
+      this.dialog = false;
+    },
+    modList(item) {
+      const index = this.listSelected.findIndex((el) => el.id === item.id);
+      if (index >= 0) {
+        this.listSelected.splice(index, 1);
+      } else {
+        this.listSelected.push(item);
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
-
+  .card-text  {
+    max-height: 800px;
+    overflow-y: auto;
+  }
 </style>
