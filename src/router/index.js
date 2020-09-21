@@ -5,9 +5,9 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/create',
-    name: 'CreateNirPage',
-    component: () => import('../components/pages/CreateNirPage.vue'),
+    path: '/list-nir/edit/:id',
+    name: 'EditNirPage',
+    component: () => import('../components/pages/EditNirPage.vue'),
   },
   {
     path: '/list-nir',
@@ -16,7 +16,7 @@ const routes = [
   },
   {
     path: '/list-okr',
-    name: 'ListNirPage',
+    name: 'ListOkrPage',
     component: () => import('../components/pages/ListOkrPage.vue'),
   },
   {

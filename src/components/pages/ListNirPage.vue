@@ -6,8 +6,11 @@
           title="Список НИР"
           :headers="headers"
           :items="NIR_LIST"
-          createLink="/create"
+          editLink="/list-nir/edit"
           dialogCreate="DialogCreateNir"
+          :actions="{
+            delete: DELETE_NIR,
+          }"
         />
       </v-card-text>
     </v-card>
@@ -38,7 +41,12 @@ export default {
         { text: 'Маштаб НИР', value: 'nirScaleName' },
         { text: 'Дата создания', value: 'createTime' },
         { text: 'Дата изменения', value: 'updateTime' },
-        { text: 'Действия', value: 'actions', align: 'end' },
+        {
+          text: 'Действия',
+          value: 'actions',
+          align: 'end',
+          sortable: false,
+        },
       ],
     };
   },
@@ -47,7 +55,7 @@ export default {
   },
   computed: mapGetters(['NIR_LIST']),
   methods: {
-    ...mapActions(['GET_NIR_LIST']),
+    ...mapActions(['GET_NIR_LIST', 'DELETE_NIR']),
   },
 };
 

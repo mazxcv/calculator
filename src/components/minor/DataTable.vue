@@ -37,10 +37,10 @@
     >
       <template v-slot:item.actions="{ item }">
         <div v-if="item.createTime">
-          <v-btn class="mr-1" icon>
+          <v-btn :to="`${editLink}/${item.id}`" class="mr-1" icon>
             <v-icon>mdi-table-edit</v-icon>
           </v-btn>
-          <v-btn class="mr-1" icon>
+          <v-btn @click.stop="actions.delete(item.id)" class="mr-1" icon>
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </div>
@@ -67,8 +67,9 @@ export default {
     title: String,
     headers: Array,
     items: Array,
-    createLink: String,
+    editLink: String,
     dialogCreate: String,
+    actions: Object,
   },
   data() {
     return {

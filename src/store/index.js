@@ -3,6 +3,7 @@ import Vuex from 'vuex';
 import nirModule from './nir';
 import laborsModule from './labors';
 import nirInnovationRateModule from './nirInnovationRate';
+import stageModule from './stages';
 
 Vue.use(Vuex);
 
@@ -11,5 +12,6 @@ export default new Vuex.Store({
     nirModule,
     laborsModule,
     nirInnovationRateModule,
+    stageModule,
   },
 });
