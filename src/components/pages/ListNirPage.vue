@@ -34,10 +34,11 @@ export default {
           align: 'start',
           value: 'name',
         },
-        { text: 'Характер новизны НИР', value: 'nirInnovationProperty' },
-        { text: 'Маштаб НИР', value: 'nirScale' },
+        { text: 'Характер новизны НИР', value: 'nirInnovationPropertyName' },
+        { text: 'Маштаб НИР', value: 'nirScaleName' },
         { text: 'Дата создания', value: 'createTime' },
         { text: 'Дата изменения', value: 'updateTime' },
+        { text: 'Действия', value: 'actions', align: 'end' },
       ],
     };
   },

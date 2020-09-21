@@ -20,7 +20,13 @@ export default {
       }));
     },
     ADD_NEW_NIR: (state, nir) => {
-      state.nirList = [nir, ...state.nirList];
+      state.nirList = [...state.nirList,
+        {
+          ...nir,
+          createTime: moment(nir.createTime).format('MMM DD YYYY, HH:mm'),
+          updateTime: moment(nir.createTime).format('MMM DD YYYY, HH:mm'),
+        },
+      ];
     },
   },
   actions: {

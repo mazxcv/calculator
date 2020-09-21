@@ -34,7 +34,18 @@
       :search="search"
       hide-default-footer
       @page-count="pageCount = $event"
-    ></v-data-table>
+    >
+      <template v-slot:item.actions="{ item }">
+        <div v-if="item.createTime">
+          <v-btn class="mr-1" icon>
+            <v-icon>mdi-table-edit</v-icon>
+          </v-btn>
+          <v-btn class="mr-1" icon>
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </div>
+      </template>
+    </v-data-table>
     <div class="text-center pt-2">
       <pagination
         :change="changePage"

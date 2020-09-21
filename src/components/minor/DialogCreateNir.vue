@@ -11,20 +11,22 @@
 
     <v-dialog
       v-model="dialog"
-      max-width="900"
+      max-width="950"
     >
       <v-card>
         <v-card-title>Создание НИР</v-card-title>
         <v-card-text class="card-text">
-          <v-text-field
-            v-model="name"
-            single-line
-            hide-details
-            rounded
-            dense
-            placeholder="Название"
-            filled
-          ></v-text-field>
+          <v-form ref="form" v-model="valid">
+            <v-text-field
+              v-model="name"
+              single-line
+              rounded
+              dense
+              :rules="[(v) => !!v || 'Введите название']"
+              placeholder="Название"
+              filled
+            ></v-text-field>
+          </v-form>
           <v-row class="ma-2">
             <v-col cols="3">
               <v-row>
@@ -51,14 +53,14 @@
                   Фундоментальная НИР
                 </v-col>
                 <v-col class="cell center" cols="4">
-                  Прикладная НИР, без создания ЭО или макета
+                  Прикладная НИР, с разработкой и изготовлением ЭО или макета
                 </v-col>
                 <v-col class="cell center" cols="4">
-                  Прикладная НИР, с разработкой и изготовлением ЭО или макета
+                  Прикладная НИР, без создания ЭО или макета
                 </v-col>
                 <v-col
                   class="cell center"
-                  v-for="(item, i) in LIST_NIR_INNOVATION_RATE" :key="i"
+                  v-for="(item, i) in sortListLabor" :key="i"
                   cols="4"
                 >
                   <v-btn
@@ -82,6 +84,7 @@
             color="primary"
             text
             @click="createNir"
+            :disabled="!valid || !nirInnovationRate"
           >
             Создать
           </v-btn>
@@ -108,6 +111,7 @@ export default {
   name: 'DialogCreateNir.vue',
   data() {
     return {
+      valid: true,
       name: '',
       nirInnovationRate: '',
       dialog: false,
@@ -115,6 +119,24 @@ export default {
   },
   computed: {
     ...mapGetters(['LIST_NIR_INNOVATION_RATE']),
+    sortListLabor() {
+      return [...this.LIST_NIR_INNOVATION_RATE].sort((a, b) => {
+        if (a.nirScaleID > b.nirScaleID) {
+          return 1;
+        } if (a.nirScaleID < b.nirScaleID) {
+          return -1;
+        }
+        return 0;
+      })
+        .sort((a, b) => {
+          if (a.nirInnovationPropertyID > b.nirInnovationPropertyID) {
+            return 1;
+          } if (a.nirInnovationPropertyID < b.nirInnovationPropertyID) {
+            return -1;
+          }
+          return 0;
+        });
+    },
   },
   methods: {
     ...mapActions(['GET_LIST_NIR_INNOVATION_RATE', 'CREATE_NIR']),
@@ -129,6 +151,7 @@ export default {
         nirScaleID: this.nirInnovationRate.nirScaleID,
         createTime: new Date(),
       });
+      this.dialog = false;
     },
   },
 };
@@ -139,14 +162,14 @@ export default {
     background-color: rgba(25, 118, 210, 0.1);
   }
   .cell {
-    height: 60px;
-    padding: 2px;
+    height: 70px;
+    padding: 3px;
     border-bottom: 1px solid rgba(146, 146, 146, 0.3);
     border-right: 1px solid rgba(146, 146, 146, 0.3);
   }
   .header {
-    height: 120px;
-    padding: 2px;
+    height: 140px;
+    padding: 3px;
     border-bottom: 1px solid rgba(146, 146, 146, 0.3);
     border-right: 1px solid rgba(146, 146, 146, 0.3);
   }
