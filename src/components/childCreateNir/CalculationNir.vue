@@ -30,16 +30,17 @@
             </v-btn>
           </v-card-title>
           <v-card-text>
-            <v-simple-table v-if="item.list[0]">
-              <template v-slot:default>
-                <thead>
-                <tr>
-                  <th style="width: 75%" class="text-left">Виды работ</th>
-                  <th style="width: 20%" class="text-left">Трудоемкость</th>
-                  <th class="text-left">Действия</th>
-                </tr>
-                </thead>
-                <tbody>
+            <div v-if="item.list[0] || item.groups[0]">
+              <v-simple-table>
+                <template v-slot:default>
+                  <thead>
+                  <tr>
+                    <th style="width: 75%" class="text-left">Виды работ</th>
+                    <th style="width: 20%" class="text-left">Трудоемкость</th>
+                    <th class="text-left">Действия</th>
+                  </tr>
+                  </thead>
+                  <tbody>
                   <tr v-for="(el, j) in item.list" :key="j">
                     <td >{{ el.name }}</td>
                     <td style="display: flex; align-items: center">
@@ -70,73 +71,78 @@
                       </v-btn>
                     </td>
                   </tr>
-                </tbody>
-              </template>
-            </v-simple-table>
+                  </tbody>
+                </template>
+              </v-simple-table>
+              <h4 v-if="item.groups[0]" class="mt-5">Группы работ:</h4>
+              <v-expansion-panels
+                flat
+                multiple
+                hover
+                accordion
+                focusable
+              >
+                <v-expansion-panel
+                  :readonly="!group.list[0]" v-for="(group, j) in item.groups"
+                  :key="j"
+                >
+                  <v-expansion-panel-header>
+                    <div>
+                      <div style="display: flex" class="mb-2">
+                        <dialog-add-works-from-group
+                          :activeClass="false"
+                          title="добавить работы"
+                          :listSelected="[...item.groups[j].list]"
+                          :stageIndex="i"
+                          :groupIndex="j"
+                          :groupId="group.id"
+                          :addList="addListLaborToGroup"
+                        />
+                        <v-btn
+                          @click.stop="deleteGroup(i, group.id)"
+                          class="ml-2"
+                          x-small
+                          outlined
+                          color="error"
+                        >
+                          Удалить группу
+                        </v-btn>
+                      </div>
+                      {{group.name}}
+                    </div>
+                  </v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    <v-simple-table>
+                      <template>
+                        <thead>
+                        <tr>
+                          <th style="width: 75%" class="text-left">Виды работ</th>
+                          <th style="width: 20%" class="text-left">Трудоемкость</th>
+                          <th class="text-left">Действия</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(labor, key) in group.list" :key="key">
+                          <td >{{labor.name}}</td>
+                          <td >test1</td>
+                          <td >test2</td>
+                        </tr>
+                        </tbody>
+                      </template>
+                    </v-simple-table>
+                  </v-expansion-panel-content>
+                  <v-divider v-if="j !== item.groups.length - 1"/>
+                </v-expansion-panel>
+              </v-expansion-panels>
+            </div>
             <div
               v-else
               style="display: flex; justify-content: center; font-size: 24px"
               class="ma-3"
             >
+              <v-icon class="icon-info">mdi-playlist-plus</v-icon>
               Добавьте работы
             </div>
-            <h4 v-if="item.groups[0]" class="mt-5">Группы работ:</h4>
-            <v-expansion-panels
-              flat
-              multiple
-              hover
-              accordion
-              focusable
-            >
-              <v-expansion-panel v-for="(group, j) in item.groups" :key="j">
-                <v-expansion-panel-header>
-                  <div>
-                    <div style="display: flex" class="mb-2">
-                      <dialog-add-works-from-group
-                        :activeClass="false"
-                        title="добавить работы"
-                        :listSelected="[...item.groups[j].list]"
-                        :stageIndex="i"
-                        :groupIndex="j"
-                        :groupId="group.id"
-                        :addList="addListLaborToGroup"
-                      />
-                      <v-btn
-                        @click.stop="deleteGroup(i, group.id)"
-                        class="ml-2"
-                        x-small
-                        outlined
-                        color="error"
-                      >
-                        Удалить группу
-                      </v-btn>
-                    </div>
-                    {{group.name}}
-                  </div>
-                </v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <v-simple-table>
-                    <template>
-                      <thead>
-                      <tr>
-                        <th style="width: 75%" class="text-left">Виды работ</th>
-                        <th style="width: 20%" class="text-left">Трудоемкость</th>
-                        <th class="text-left">Действия</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr v-for="(labor, key) in group.list" :key="key">
-                        <td >{{labor.name}}</td>
-                        <td >test1</td>
-                        <td >test2</td>
-                      </tr>
-                      </tbody>
-                    </template>
-                  </v-simple-table>
-                </v-expansion-panel-content>
-                <v-divider v-if="j !== item.groups.length - 1"/>
-              </v-expansion-panel>
-            </v-expansion-panels>
           </v-card-text>
         </v-card>
       </v-timeline-item>
@@ -212,6 +218,9 @@ export default {
 </script>
 
 <style scoped>
+  .icon-info {
+    font-size: 6vw;
+  }
  .main-container{
    padding: 2% 8% 2% 2%;
  }
