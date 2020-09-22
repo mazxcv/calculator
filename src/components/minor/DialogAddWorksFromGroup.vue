@@ -4,7 +4,7 @@
       x-small
       color="primary"
       outlined
-      @click.stop="dialog = true"
+      @click.stop="showList(groupId)"
     >
       {{title}}
     </v-btn>
@@ -15,7 +15,7 @@
     >
       <v-card>
         <v-card-text class="card-text">
-          <v-list nav>
+          <v-list>
             <v-list-item-group color="primary">
               <v-list-item
                 v-for="(item, i) in fullList"
@@ -60,8 +60,10 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
-  name: 'DialogForAddingNir',
+  name: 'DialogAddWorksGroup',
   data() {
     return {
       dialog: false,
@@ -75,14 +77,17 @@ export default {
     stageIndex: Number,
     title: String,
     addList: Function,
+    groupId: Number,
   },
   computed: {
+    ...mapGetters(['NIR_GROUP_LABOR_LIST']),
     checkboxes() {
-      return this.fullList
+      return this.NIR_GROUP_LABOR_LIST
         .map((el) => this.listSelected.find((selected) => selected.id === el.id));
     },
   },
   methods: {
+    ...mapActions(['GET_NIR_GROUP_LABOR_LIST']),
     saveList() {
       if (this.groupIndex === undefined) {
         this.addList(this.stageIndex, this.listSelected.map((el) => ({
@@ -97,6 +102,10 @@ export default {
       }
       this.dialog = false;
     },
+    showList(id) {
+      this.GET_NIR_GROUP_LABOR_LIST(id);
+      this.dialog = true;
+    },
     modList(item) {
       const index = this.listSelected.findIndex((el) => el.id === item.id);
       if (index >= 0) {
@@ -110,8 +119,8 @@ export default {
 </script>
 
 <style scoped>
-.card-text  {
-  max-height: 800px;
-  overflow-y: auto;
-}
+  .card-text  {
+    max-height: 800px;
+    overflow-y: auto;
+  }
 </style>

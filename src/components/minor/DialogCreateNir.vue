@@ -118,7 +118,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['LIST_NIR_INNOVATION_RATE']),
+    ...mapGetters(['LIST_NIR_INNOVATION_RATE', 'CREATED_NIR_ID']),
     sortListLabor() {
       return [...this.LIST_NIR_INNOVATION_RATE].sort((a, b) => {
         if (a.nirScaleID > b.nirScaleID) {
@@ -143,14 +143,16 @@ export default {
     saveInnovationRate(item) {
       this.nirInnovationRate = item;
     },
-    createNir() {
-      this.CREATE_NIR({
+    async createNir() {
+      await this.CREATE_NIR({
         id: 0,
         name: this.name,
         nirInnovationPropertyID: this.nirInnovationRate.nirInnovationPropertyID,
         nirScaleID: this.nirInnovationRate.nirScaleID,
         createTime: new Date(),
       });
+      console.log('id:', this.CREATED_NIR_ID);
+      this.$router.push(`/list-nir/edit/${this.CREATED_NIR_ID}`);
       this.dialog = false;
     },
   },

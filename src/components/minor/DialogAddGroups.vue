@@ -22,7 +22,7 @@
                 v-for="(item, i) in fullList"
                 :key="i"
               >
-                <v-list-item-content>
+                <v-list-item-content style="padding: 0">
                   <div style="display: flex; align-items: center">
                     <v-checkbox
                       v-model="checkboxes[i]"

@@ -17,7 +17,7 @@
               <div>
                 <dialog-add-groups
                   title="добавить группы работ"
-                  :fullList="fullListGroups"
+                  :fullList="listGroup"
                   :listSelected="[...item.groups]"
                   :stageIndex="i"
                   :addList="addListGroup"
@@ -92,13 +92,13 @@
                 <v-expansion-panel-header>
                   <div>
                     <div style="display: flex" class="mb-2">
-                      <dialog-add-works
+                      <dialog-add-works-from-group
                         :activeClass="false"
                         title="добавить работы"
-                        :fullList="group.works"
                         :listSelected="[...item.groups[j].list]"
                         :stageIndex="i"
                         :groupIndex="j"
+                        :groupId="group.id"
                         :addList="addListLaborToGroup"
                       />
                       <v-btn
@@ -142,7 +142,7 @@
       </v-timeline-item>
     </v-timeline>
     <v-btn :disabled="!stages[stages.length - 1].list[0]" color="primary" @click="addStage">
-      add stage
+      Добавить этап
     </v-btn>
   </div>
 </template>
@@ -150,53 +150,17 @@
 <script>
 import DialogAddWorks from '../minor/DialogAddWorks.vue';
 import DialogAddGroups from '../minor/DialogAddGroups.vue';
+import DialogAddWorksFromGroup from '../minor/DialogAddWorksFromGroup.vue';
 
 export default {
   name: 'CalculationNir',
   props: {
     listLabor: Array,
+    listGroup: Array,
   },
   data() {
     return {
       valid: true,
-      fullListGroups: [
-        {
-          id: 6,
-          name: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus rereg',
-          list: [],
-          works: [
-            {
-              id: 11,
-              name: '42 Lorem ipsum dolor sit amet, consectetur adipisicing elit. At dicta eaque '
-              + 'iste odio quasi reprehenderit voluptatibus. Adipisci cum dolor incidunt '
-              + 'laudantium officiis, porro repudiandae tenetur?',
-            },
-          ],
-        },
-        {
-          id: 7,
-          name: 'Lorem ipsum dolor sit amet',
-          list: [],
-          works: [
-            {
-              id: 12,
-              name: '34 Lorem ipsum dolor sit amet, consectetur adipisicing elit. At dicta eaque '
-              + 'iste odio quasi reprehenderit voluptatibus. Adipisci cum dolor incidunt '
-              + 'laudantium officiis, porro repudiandae tenetur?',
-            },
-          ],
-        },
-      ],
-      testList: [
-        {
-          maxVolume: 0.01,
-          minVolume: 0.02,
-          step: 0.001,
-          volume: 0.017,
-          overMax: 0.023,
-          name: 'Выборка рекомендаций по использованию результатов НИР',
-        },
-      ],
       stages: [
         {
           title: 'Этап',
@@ -220,7 +184,10 @@ export default {
       this.stages[indexStage].groups[indexGroup].list = list;
     },
     addListGroup(index, groups) {
-      this.stages[index].groups = groups;
+      this.stages[index].groups = groups.map((el) => ({
+        ...el,
+        list: [],
+      }));
     },
     deleteStage() {
       this.stages.pop();
@@ -239,6 +206,7 @@ export default {
   components: {
     DialogAddWorks,
     DialogAddGroups,
+    DialogAddWorksFromGroup,
   },
 };
 </script>

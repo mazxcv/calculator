@@ -8,9 +8,11 @@ export default {
   state: {
     nirList: [],
     currentNir: {},
+    createdNirId: '',
   },
   getters: {
     NIR_LIST: (state) => state.nirList,
+    CREATED_NIR_ID: (state) => state.createdNirId,
   },
   mutations: {
     SET_NIR_LIST: (state, list) => {
@@ -24,6 +26,7 @@ export default {
       state.currentNir = nir;
     },
     ADD_NEW_NIR: (state, nir) => {
+      state.createdNirId = nir.id;
       state.nirList = [...state.nirList,
         {
           ...nir,
@@ -32,12 +35,14 @@ export default {
         },
       ];
     },
+    SET_DELETE_TASK: (state, id) => {
+      state.nirList = state.nirList.filter((el) => el.id !== id);
+    },
   },
   actions: {
     GET_NIR_CURRENT: async (context, id) => {
       await axios.get(`${HOST}/Nir/${id}`)
         .then((res) => {
-          console.log(res);
           context.commit('SET_NIR_CURRENT', res.data);
         })
         .catch((e) => {
@@ -54,10 +59,8 @@ export default {
         });
     },
     CREATE_NIR: async (context, payload) => {
-      console.log(payload);
       await axios.post(`${HOST}/Nir`, payload)
         .then((res) => {
-          console.log(res.data);
           context.commit('ADD_NEW_NIR', res.data);
         })
         .catch((e) => {
@@ -67,8 +70,8 @@ export default {
     DELETE_NIR: async (context, id) => {
       console.log(id);
       await axios.delete(`${HOST}/Nir/${id}`)
-        .then((res) => {
-          console.log(res);
+        .then(() => {
+          context.commit('SET_DELETE_TASK', id);
         })
         .catch((e) => {
           console.log(e);

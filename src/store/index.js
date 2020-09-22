@@ -1,17 +1,19 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import nirModule from './nir';
-import laborsModule from './labors';
+import nirLaborsModule from './nirLabors';
 import nirInnovationRateModule from './nirInnovationRate';
-import stageModule from './stages';
+import nirStagesModule from './nirStages';
+import nirGroupModule from './nirGroup';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
     nirModule,
-    laborsModule,
+    nirLaborsModule,
     nirInnovationRateModule,
-    stageModule,
+    nirStagesModule,
+    nirGroupModule,
   },
 });

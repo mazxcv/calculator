@@ -5,6 +5,10 @@ Vue.use(VueRouter);
 
 const routes = [
   {
+    path: '/',
+    redirect: '/list-nir',
+  },
+  {
     path: '/list-nir/edit/:id',
     name: 'EditNirPage',
     component: () => import('../components/pages/EditNirPage.vue'),
