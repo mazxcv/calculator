@@ -16,7 +16,7 @@ export default {
       state.nirGroupList = list;
     },
     SET_NIR_GROUP_LABOR_LIST: (state, list) => {
-      state.nirGrouLaborList = list;
+      state.nirGroupLaborList = list;
     },
   },
   actions: {
@@ -29,8 +29,8 @@ export default {
           console.log(e);
         });
     },
-    GET_NIR_GROUP_LABOR_LIST: async (context, id) => {
-      await axios.get(`${HOST}/NirSoftwareDevLaborGroup/${id}`)
+    GET_NIR_GROUP_LABOR_LIST: async (context) => {
+      await axios.get(`${HOST}/SoftwareDevLabor/`)
         .then((res) => {
           context.commit('SET_NIR_GROUP_LABOR_LIST', res.data);
         })

@@ -4,7 +4,7 @@
       x-small
       color="primary"
       outlined
-      @click.stop="showList(groupId)"
+      @click.stop="showList()"
     >
       {{title}}
     </v-btn>
@@ -18,7 +18,7 @@
           <v-list>
             <v-list-item-group color="primary">
               <v-list-item
-                v-for="(item, i) in fullList"
+                v-for="(item, i) in NIR_GROUP_LABOR_LIST"
                 :key="i"
               >
                 <v-list-item-content style="padding: 0">
@@ -71,7 +71,6 @@ export default {
     };
   },
   props: {
-    fullList: Array,
     listSelected: Array,
     groupIndex: Number,
     stageIndex: Number,
@@ -82,6 +81,7 @@ export default {
   computed: {
     ...mapGetters(['NIR_GROUP_LABOR_LIST']),
     checkboxes() {
+      console.log(this.NIR_GROUP_LABOR_LIST);
       return this.NIR_GROUP_LABOR_LIST
         .map((el) => this.listSelected.find((selected) => selected.id === el.id));
     },
@@ -102,8 +102,8 @@ export default {
       }
       this.dialog = false;
     },
-    showList(id) {
-      this.GET_NIR_GROUP_LABOR_LIST(id);
+    showList() {
+      this.GET_NIR_GROUP_LABOR_LIST();
       this.dialog = true;
     },
     modList(item) {

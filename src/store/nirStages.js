@@ -8,7 +8,7 @@ export default {
     currentStages: [],
   },
   getters: {
-    STAGE_LIST: (state) => state.stageList.reverse(),
+    NIR_STAGE_LIST: (state) => state.stageList,
     CURRENT_STAGES: (state) => state.currentStages,
   },
   mutations: {
@@ -20,6 +20,15 @@ export default {
     },
   },
   actions: {
+    REG_NIR_STAGE: async (context, payload) => {
+      await axios.post(`${HOST}/NirStageReg`, payload)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
     GET_CURRENT_STAGES: async (context, id) => {
       await axios.get(`${HOST}/Nir/${id}/Stages`)
         .then((res) => {
@@ -29,7 +38,7 @@ export default {
           console.log(e);
         });
     },
-    GET_STAGE_LIST: async (context) => {
+    GET_NIR_STAGE_LIST: async (context) => {
       await axios.get(`${HOST}/NirStage`)
         .then((res) => {
           context.commit('SET_STAGE_LIST', res.data);

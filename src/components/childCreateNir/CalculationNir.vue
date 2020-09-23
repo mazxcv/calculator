@@ -137,11 +137,13 @@
             </div>
             <div
               v-else
-              style="display: flex; justify-content: center; font-size: 24px"
-              class="ma-3"
+              class="ma-3 mb-6 inf-block"
             >
               <v-icon class="icon-info">mdi-playlist-plus</v-icon>
-              Добавьте работы
+              <div style="display: flex; justify-content: center">
+                Добавьте работы
+              </div>
+
             </div>
           </v-card-text>
         </v-card>
@@ -199,8 +201,6 @@ export default {
       this.stages.pop();
     },
     deleteGroup(indexStage, idGroup) {
-      console.log(indexStage);
-      console.log(idGroup);
       this.stages[indexStage].groups = this.stages[indexStage].groups
         .filter((el) => el.id !== idGroup);
     },
@@ -218,10 +218,18 @@ export default {
 </script>
 
 <style scoped>
-  .icon-info {
-    font-size: 6vw;
-  }
- .main-container{
-   padding: 2% 8% 2% 2%;
- }
+.icon-info {
+  color: rgba(117, 117, 117, 0.6);
+  font-size: 6vw;
+}
+.main-container{
+  padding: 2% 8% 2% 2%;
+}
+.inf-block {
+  color: rgba(117, 117, 117, 0.6);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 24px;
+}
 </style>

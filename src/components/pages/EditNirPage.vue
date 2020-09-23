@@ -18,22 +18,25 @@ export default {
   },
   mounted() {
     this.GET_LIST_LABOR();
-    this.GET_STAGE_LIST();
+    this.GET_NIR_STAGE_LIST();
     this.GET_NIR_GROUP_LIST();
     this.GET_CURRENT_STAGES(Number(this.$router.history.current.params.id));
   },
   computed: mapGetters([
     'LIST_LABOR',
-    'STAGE_LIST',
+    'NIR_STAGE_LIST',
     'NIR_GROUP_LIST',
   ]),
-  methods: mapActions([
-    'GET_LIST_LABOR',
-    'GET_STAGE_LIST',
-    'GET_NIR_CURRENT',
-    'GET_CURRENT_STAGES',
-    'GET_NIR_GROUP_LIST',
-  ]),
+  methods: {
+    ...mapActions([
+      'GET_LIST_LABOR',
+      'GET_NIR_STAGE_LIST',
+      'GET_NIR_CURRENT',
+      'GET_CURRENT_STAGES',
+      'GET_NIR_GROUP_LIST',
+      'REG_NIR_STAGE',
+    ]),
+  },
 };
 </script>
 
