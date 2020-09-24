@@ -1,22 +1,24 @@
 <template>
   <div>
-    <v-timeline dense >
+    <v-timeline v-if="stages[0]" dense >
       <v-timeline-item small v-for="(item, i) in stages" :key="i">
         <v-card class="elevation-2">
           <v-card-title style="display: flex; justify-content: space-between">
             <div style="display: flex; align-items: center">
-              <div>{{ `${item.title} ${i + 1}`}}</div>
+              <div>{{i + 1}}</div>
               <dialog-add-works
                 class="ml-2 mb-1"
                 title="добавить работы"
                 :fullList="listLabor"
                 :listSelected="[...item.list]"
                 :stageIndex="i"
+                titleCard="Список работ"
                 :addList="addListLabor"
               />
               <div>
                 <dialog-add-groups
                   title="добавить группы работ"
+                  titleCard="Список групп работ"
                   :fullList="listGroup"
                   :listSelected="[...item.groups]"
                   :stageIndex="i"
@@ -92,6 +94,7 @@
                         <dialog-add-works-from-group
                           :activeClass="false"
                           title="добавить работы"
+                          titleCard="Список работ"
                           :listSelected="[...item.groups[j].list]"
                           :stageIndex="i"
                           :groupIndex="j"
@@ -149,7 +152,11 @@
         </v-card>
       </v-timeline-item>
     </v-timeline>
-    <v-btn :disabled="!stages[stages.length - 1].list[0]" color="primary" @click="addStage">
+    <v-btn
+      :disabled="stages[0] ? !stages[stages.length - 1].list[0] : false"
+      color="primary"
+      @click="addStage()"
+    >
       Добавить этап
     </v-btn>
   </div>
@@ -165,25 +172,33 @@ export default {
   props: {
     listLabor: Array,
     listGroup: Array,
+    actions: Object,
+    data: Object,
+    nirId: Number,
   },
   data() {
     return {
       valid: true,
-      stages: [
-        {
-          title: 'Этап',
-          list: [],
-          groups: [],
-        },
-      ],
+      stages: [{
+        list: [],
+        groups: [],
+      }],
     };
+  },
+  computed: {
+
   },
   methods: {
     colorSlider(maxValue, value) {
       return value > maxValue ? 'error' : 'primary';
     },
     addStage() {
-      this.stages = [...this.stages, { title: 'Этап', list: [], groups: [] }];
+      this.stages = [...this.stages, { list: [], groups: [] }];
+      // this.actions.addStage({
+      //   id: 0,
+      //   nirID: this.data.nirId,
+      //   stageID,
+      // });
     },
     addListLabor(index, list) {
       this.stages[index].list = list;

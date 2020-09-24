@@ -10,10 +10,12 @@
     </v-btn>
 
     <v-dialog
+      persistent
       v-model="dialog"
       max-width="800"
     >
       <v-card>
+        <v-card-title>{{titleCard}}</v-card-title>
         <v-card-text class="card-text">
           <v-list nav>
             <v-list-item-group color="primary">
@@ -75,6 +77,7 @@ export default {
     stageIndex: Number,
     title: String,
     addList: Function,
+    titleCard: String,
   },
   computed: {
     checkboxes() {
@@ -111,7 +114,7 @@ export default {
 
 <style scoped>
 .card-text  {
-  max-height: 800px;
+  max-height: 700px;
   overflow-y: auto;
 }
 </style>

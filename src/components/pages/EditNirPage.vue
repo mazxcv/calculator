@@ -3,6 +3,14 @@
     <calculation-nir
       :listLabor="LIST_LABOR"
       :listGroup="NIR_GROUP_LIST"
+      :data="{
+        nirId,
+        nirStages: NIR_STAGE_LIST,
+        currentNirStages: CURRENT_STAGES,
+      }"
+      :actions="{
+        addStage: REG_NIR_STAGE,
+      }"
     />
   </div>
 </template>
@@ -20,12 +28,19 @@ export default {
     this.GET_LIST_LABOR();
     this.GET_NIR_STAGE_LIST();
     this.GET_NIR_GROUP_LIST();
-    this.GET_CURRENT_STAGES(Number(this.$router.history.current.params.id));
+    this.GET_NIR_CURRENT(this.nirId);
+    this.GET_CURRENT_STAGES(this.nirId);
+  },
+  data() {
+    return {
+      nirId: Number(this.$router.history.current.params.id),
+    };
   },
   computed: mapGetters([
     'LIST_LABOR',
     'NIR_STAGE_LIST',
     'NIR_GROUP_LIST',
+    'CURRENT_STAGES',
   ]),
   methods: {
     ...mapActions([

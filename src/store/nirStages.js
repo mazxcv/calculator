@@ -16,7 +16,11 @@ export default {
       state.stageList = list;
     },
     SET_CURRENT_STAGES: (state, list) => {
-      state.currentStages = list;
+      state.currentStages = list.map((stage) => ({
+        ...stage,
+        list: [],
+        groups: [],
+      }));
     },
   },
   actions: {
