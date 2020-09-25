@@ -13,19 +13,85 @@
       v-model="dialog"
       max-width="950"
     >
-      <v-card>
+      <v-card v-if="dialog">
         <v-card-title>Создание НИР</v-card-title>
         <v-card-text class="card-text">
           <v-form ref="form" v-model="valid">
-            <v-text-field
-              v-model="name"
-              single-line
-              rounded
-              dense
-              :rules="[(v) => !!v || 'Введите название']"
-              placeholder="Название"
-              filled
-            ></v-text-field>
+            <v-row>
+              <v-col class="cols" cols="12">
+                <v-text-field
+                  v-model="name"
+                  :rules="[(v) => !!v || 'Введите название']"
+                  label="Название"
+                ></v-text-field>
+              </v-col>
+              <v-col class="cols" cols="3">
+                <v-text-field
+                  type="number"
+                  v-model="duration"
+                  :rules="[(v) => !!v || 'Укажите продолжительность']"
+                  label="Продолжительность в месяцах"
+                ></v-text-field>
+              </v-col>
+              <v-col class="cols" cols="3">
+                <v-menu
+                  v-model="menuFrom"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="dateFrom"
+                      label="Действует с:"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    locale="ru"
+                    v-model="dateFrom"
+                    @input="menuFrom = false"
+                  />
+                </v-menu>
+              </v-col>
+              <v-col class="cols" cols="3">
+                <v-menu
+                  v-model="menuTo"
+                  :close-on-content-click="false"
+                  :nudge-right="40"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="290px"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-text-field
+                      v-model="dateTo"
+                      label="Действует до:"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                    ></v-text-field>
+                  </template>
+                  <v-date-picker
+                    locale="ru"
+                    v-model="dateTo"
+                    @input="menuTo = false"
+                  />
+                </v-menu>
+              </v-col>
+              <v-col cols="3">
+                <v-text-field
+                  readonly
+                  v-model="intensiveRate"
+                  :rules="[(v) => !!v || 'Не может быть 0']"
+                  label="Интенсивность работ:"
+                ></v-text-field>
+              </v-col>
+            </v-row>
           </v-form>
           <v-row class="ma-2">
             <v-col cols="3">
@@ -113,12 +179,28 @@ export default {
     return {
       valid: true,
       name: '',
+      duration: 0,
+      menuFrom: false,
+      menuTo: false,
+      dateFrom: new Date().toISOString().substr(0, 10),
+      dateTo: new Date().toISOString().substr(0, 10),
       nirInnovationRate: '',
       dialog: false,
     };
   },
   computed: {
     ...mapGetters(['LIST_NIR_INNOVATION_RATE', 'CREATED_NIR_ID']),
+    intensiveRate() {
+      const currentDuration = Math
+        .round(((new Date(this.dateTo) - new Date(this.dateFrom)) / (60 * 60 * 24 * 1000)) / 30.33);
+      if (currentDuration && Number(this.duration)) {
+        const res = (Number(this.duration) / currentDuration).toFixed(3);
+        if (res > 1.2) return 1.2;
+        if (res < 0.8) return 0.8;
+        return res;
+      }
+      return 0;
+    },
     sortListLabor() {
       return [...this.LIST_NIR_INNOVATION_RATE].sort((a, b) => {
         if (a.nirScaleID > b.nirScaleID) {
