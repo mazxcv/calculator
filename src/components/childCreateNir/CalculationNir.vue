@@ -2,7 +2,7 @@
   <div>
     <div style="display: flex">
       <h2 class="text--secondary">{{data.nir.name}} </h2>
-      <v-chip class="ml-3" color="success">
+      <v-chip class="ml-3" outlined color="success">
         <v-avatar left>
           <v-icon>mdi-cash-multiple</v-icon>
         </v-avatar>
@@ -40,7 +40,7 @@
                 <v-btn class="ml-2" color="primary" :disabled="!valid" x-small>сохранить</v-btn>
               </v-col>
               <v-col cols="3" style="display: flex; align-items: center; justify-content: flex-end">
-                <v-chip color="success">
+                <v-chip outlined color="success">
                   <v-avatar left>
                     <v-icon>mdi-cash-multiple</v-icon>
                   </v-avatar>
@@ -59,6 +59,30 @@
           </v-card-title>
           <v-card-text >
             <div v-if="item.list[0] || item.groups[0]">
+              <v-expansion-panels flat>
+                <v-expansion-panel>
+                  <v-expansion-panel-header>
+                    <div style="display: flex; align-items: center">
+                      Коффициент новизны:
+                      <v-icon
+                        v-if="!nirInnovationRate"
+                        class="ml-2"
+                        color="warning"
+                      >
+                        mdi-alert-circle
+                      </v-icon>
+                    </div>
+                  </v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    <novelty-rate
+                      :saveInnovationRate="saveInnovationRate"
+                      :listLabor="sortListLabor"
+                      :nirInnovationRate="nirInnovationRate"
+                    />
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+              </v-expansion-panels>
+
               <v-simple-table>
                 <template v-slot:default>
                   <thead>
@@ -192,6 +216,8 @@
 import DialogAddWorks from '../minor/DialogAddWorks.vue';
 import DialogAddGroups from '../minor/DialogAddGroups.vue';
 import DialogAddWorksFromGroup from '../minor/DialogAddWorksFromGroup.vue';
+import NoveltyRate from './NoveltyRate.vue';
+import sortListInnovationRate from '../../utils/helpers';
 
 export default {
   name: 'CalculationNir',
@@ -202,8 +228,15 @@ export default {
     data: Object,
     nirId: Number,
   },
+  components: {
+    DialogAddWorks,
+    DialogAddGroups,
+    DialogAddWorksFromGroup,
+    NoveltyRate,
+  },
   data() {
     return {
+      nirInnovationRate: '',
       valid: true,
       stages: [{
         list: [],
@@ -212,9 +245,14 @@ export default {
     };
   },
   computed: {
-
+    sortListLabor() {
+      return sortListInnovationRate(this.data.listNirInnovationRate);
+    },
   },
   methods: {
+    saveInnovationRate(item) {
+      this.nirInnovationRate = item;
+    },
     colorSlider(maxValue, value) {
       return value > maxValue ? 'error' : 'primary';
     },
@@ -250,11 +288,6 @@ export default {
       this.stages[stageId].list.splice(index, 1);
     },
   },
-  components: {
-    DialogAddWorks,
-    DialogAddGroups,
-    DialogAddWorksFromGroup,
-  },
 };
 </script>
 
@@ -263,9 +296,6 @@ export default {
   color: rgba(117, 117, 117, 0.6);
   font-size: 6vw;
 }
-.main-container{
-  padding: 2% 8% 2% 2%;
-}
 .inf-block {
   color: rgba(117, 117, 117, 0.6);
   display: flex;
@@ -273,16 +303,5 @@ export default {
   justify-content: center;
   font-size: 24px;
 }
-.v-sheet--offset {
-  top: -24px;
-}
-.volume {
-  height: 70px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  top: -15px;
-}
+
 </style>

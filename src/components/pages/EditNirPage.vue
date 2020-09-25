@@ -8,6 +8,7 @@
         nir: CURRENT_NIR,
         nirStages: NIR_STAGE_LIST,
         currentNirStages: CURRENT_STAGES,
+        listNirInnovationRate: LIST_NIR_INNOVATION_RATE,
       }"
       :actions="{
         addStage: REG_NIR_STAGE,
@@ -29,6 +30,7 @@ export default {
     this.GET_LIST_LABOR();
     this.GET_NIR_STAGE_LIST();
     this.GET_NIR_GROUP_LIST();
+    this.GET_LIST_NIR_INNOVATION_RATE();
     this.GET_NIR_CURRENT(this.nirId);
     this.GET_CURRENT_STAGES(this.nirId);
   },
@@ -43,6 +45,7 @@ export default {
     'NIR_GROUP_LIST',
     'CURRENT_STAGES',
     'CURRENT_NIR',
+    'LIST_NIR_INNOVATION_RATE',
   ]),
   methods: {
     ...mapActions([
@@ -52,6 +55,7 @@ export default {
       'GET_CURRENT_STAGES',
       'GET_NIR_GROUP_LIST',
       'REG_NIR_STAGE',
+      'GET_LIST_NIR_INNOVATION_RATE',
     ]),
   },
 };

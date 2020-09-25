@@ -1,102 +1,79 @@
 <template>
-  <div class="mb-5" style="width: 100%">
-    <v-expansion-panels>
-      <v-expansion-panel>
-        <v-expansion-panel-header>
-          <div style="display: flex; align-items: center">
-            Коффициент новизны Кн НИР
-            <v-icon color="warning" class="ml-2">mdi-alert-circle</v-icon>
-          </div>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content>
-          <v-card elevation="0">
-            <v-card-text>
-              <v-row>
-                <v-col cols="3">
-                  <v-row>
-                    <v-col class="header center border-left border-top" cols="12">
-                      Характеристика новизны
-                    </v-col>
-                    <v-col class="cell border-left" cols="12">
-                      Работа в развитии предшевтсвующей
-                    </v-col>
-                    <v-col class="cell border-left" cols="12">
-                      Работа с известным аналогом
-                    </v-col>
-                    <v-col class="cell border-left" cols="12">
-                      Работа, не имеющая известных аналогов
-                    </v-col>
-                  </v-row>
-                </v-col>
-                <v-col cols="9">
-                  <v-row>
-                    <v-col class="cell center border-top" cols="12">
-                      Коффициент новизны Кн НИР
-                    </v-col>
-                    <v-col class="cell center" cols="4">
-                      Фундоментальная НИР
-                    </v-col>
-                    <v-col class="cell center" cols="4">
-                      Прикладная НИР, без создания ЭО или макета
-                    </v-col>
-                    <v-col class="cell center" cols="4">
-                      Прикладная НИР, с разработкой и изготовлением ЭО или макета
-                    </v-col>
-                    <v-col
-                      class="cell center"
-                      v-for="(item, i) in arr" :key="i"
-                      cols="4"
-                    >
-                      <v-btn
-                        @click="message(item)"
-                        active
-                        color="primary"
-                        style="height: 100%; width: 100%"
-                        text
-                      >
-                        {{item}}
-                      </v-btn>
-                    </v-col>
-                  </v-row>
-                </v-col>
-              </v-row>
-            </v-card-text>
-          </v-card>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-    </v-expansion-panels>
-  </div>
+  <v-row class="ma-2">
+    <v-col cols="3">
+      <v-row>
+        <v-col class="header center border-left border-top" cols="12">
+          Характеристика новизны
+        </v-col>
+        <v-col class="cell border-left" cols="12">
+          Работа в развитии предшевтсвующей
+        </v-col>
+        <v-col class="cell border-left" cols="12">
+          Работа с известным аналогом
+        </v-col>
+        <v-col class="cell border-left" cols="12">
+          Работа, не имеющая известных аналогов
+        </v-col>
+      </v-row>
+    </v-col>
+    <v-col cols="9">
+      <v-row>
+        <v-col class="cell center border-top" cols="12">
+          Коффициент новизны Кн НИР
+        </v-col>
+        <v-col class="cell center" cols="4">
+          Фундоментальная НИР
+        </v-col>
+        <v-col class="cell center" cols="4">
+          Прикладная НИР, с разработкой и изготовлением ЭО или макета
+        </v-col>
+        <v-col class="cell center" cols="4">
+          Прикладная НИР, без создания ЭО или макета
+        </v-col>
+        <v-col
+          class="cell center"
+          v-for="(item, i) in listLabor" :key="i"
+          cols="4"
+        >
+          <v-btn
+            v-bind:class="{ btn: nirInnovationRate.id === item.id }"
+            @click="saveInnovationRate(item)"
+            color="primary"
+            style="height: 100%; width: 100%"
+            text
+          >
+            {{item.value}}
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
 export default {
   name: 'NoveltyRate',
-  data() {
-    return {
-      arr: [1.3, 1.0, 1.2, 1.7, 1.4, 1.7, 2.9, 2.5, 2.7],
-    };
-  },
-  methods: {
-    message(item) {
-      console.log(item);
-    },
+  props: {
+    saveInnovationRate: Function,
+    listLabor: Array,
+    nirInnovationRate: Object,
   },
 };
 </script>
 
 <style scoped>
-.btn:hover {
-  background-color: rgba(146, 146, 146, 0.3);
+.btn {
+  background-color: rgba(25, 118, 210, 0.1);
 }
 .cell {
-  height: 50px;
-  padding: 2px;
+  height: 70px;
+  padding: 3px;
   border-bottom: 1px solid rgba(146, 146, 146, 0.3);
   border-right: 1px solid rgba(146, 146, 146, 0.3);
 }
 .header {
-  height: 100px;
-  padding: 2px;
+  height: 140px;
+  padding: 3px;
   border-bottom: 1px solid rgba(146, 146, 146, 0.3);
   border-right: 1px solid rgba(146, 146, 146, 0.3);
 }

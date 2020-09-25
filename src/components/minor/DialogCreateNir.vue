@@ -93,55 +93,11 @@
               </v-col>
             </v-row>
           </v-form>
-          <v-row class="ma-2">
-            <v-col cols="3">
-              <v-row>
-                <v-col class="header center border-left border-top" cols="12">
-                  Характеристика новизны
-                </v-col>
-                <v-col class="cell border-left" cols="12">
-                  Работа в развитии предшевтсвующей
-                </v-col>
-                <v-col class="cell border-left" cols="12">
-                  Работа с известным аналогом
-                </v-col>
-                <v-col class="cell border-left" cols="12">
-                  Работа, не имеющая известных аналогов
-                </v-col>
-              </v-row>
-            </v-col>
-            <v-col cols="9">
-              <v-row>
-                <v-col class="cell center border-top" cols="12">
-                  Коффициент новизны Кн НИР
-                </v-col>
-                <v-col class="cell center" cols="4">
-                  Фундоментальная НИР
-                </v-col>
-                <v-col class="cell center" cols="4">
-                  Прикладная НИР, с разработкой и изготовлением ЭО или макета
-                </v-col>
-                <v-col class="cell center" cols="4">
-                  Прикладная НИР, без создания ЭО или макета
-                </v-col>
-                <v-col
-                  class="cell center"
-                  v-for="(item, i) in sortListLabor" :key="i"
-                  cols="4"
-                >
-                  <v-btn
-                    v-bind:class="{ btn: nirInnovationRate.id === item.id }"
-                    @click="saveInnovationRate(item)"
-                    color="primary"
-                    style="height: 100%; width: 100%"
-                    text
-                  >
-                    {{item.value}}
-                  </v-btn>
-                </v-col>
-              </v-row>
-            </v-col>
-          </v-row>
+          <novelty-rate
+            :saveInnovationRate="saveInnovationRate"
+            :listLabor="sortListLabor"
+            :nirInnovationRate="nirInnovationRate"
+          />
         </v-card-text>
 
         <v-card-actions>
@@ -169,12 +125,17 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+import NoveltyRate from '../childCreateNir/NoveltyRate.vue';
+import sortListInnovationRate from '../../utils/helpers';
 
 export default {
+  name: 'DialogCreateNir.vue',
+  components: {
+    NoveltyRate,
+  },
   mounted() {
     this.GET_LIST_NIR_INNOVATION_RATE();
   },
-  name: 'DialogCreateNir.vue',
   data() {
     return {
       valid: true,
@@ -202,22 +163,7 @@ export default {
       return 0;
     },
     sortListLabor() {
-      return [...this.LIST_NIR_INNOVATION_RATE].sort((a, b) => {
-        if (a.nirScaleID > b.nirScaleID) {
-          return 1;
-        } if (a.nirScaleID < b.nirScaleID) {
-          return -1;
-        }
-        return 0;
-      })
-        .sort((a, b) => {
-          if (a.nirInnovationPropertyID > b.nirInnovationPropertyID) {
-            return 1;
-          } if (a.nirInnovationPropertyID < b.nirInnovationPropertyID) {
-            return -1;
-          }
-          return 0;
-        });
+      return sortListInnovationRate(this.LIST_NIR_INNOVATION_RATE);
     },
   },
   methods: {
