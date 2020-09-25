@@ -46,7 +46,7 @@
             text
             @click="saveList"
           >
-            Добавить работы
+            Далее
           </v-btn>
           <v-btn
             color="primary"

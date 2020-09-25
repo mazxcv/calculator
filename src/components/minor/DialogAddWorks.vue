@@ -23,7 +23,9 @@
                 v-for="(item, i) in fullList"
                 :key="i"
               >
-                <v-list-item-content style="padding: 0">
+                <v-list-item-content
+                  style="padding: 0"
+                >
                   <div style="display: flex; align-items: center">
                     <v-checkbox
                       v-model="checkboxes[i]"
@@ -46,7 +48,7 @@
             text
             @click="saveList"
           >
-            Добавить работы
+            Далее
           </v-btn>
           <v-btn
             color="primary"
@@ -67,6 +69,7 @@ export default {
   data() {
     return {
       dialog: false,
+      listGroup: [],
       items: [],
     };
   },

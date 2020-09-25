@@ -5,6 +5,7 @@
       :listGroup="NIR_GROUP_LIST"
       :data="{
         nirId,
+        nir: CURRENT_NIR,
         nirStages: NIR_STAGE_LIST,
         currentNirStages: CURRENT_STAGES,
       }"
@@ -41,6 +42,7 @@ export default {
     'NIR_STAGE_LIST',
     'NIR_GROUP_LIST',
     'CURRENT_STAGES',
+    'CURRENT_NIR',
   ]),
   methods: {
     ...mapActions([

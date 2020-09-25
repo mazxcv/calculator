@@ -1,37 +1,63 @@
 <template>
   <div>
+    <div style="display: flex">
+      <h2 class="text--secondary">{{data.nir.name}} </h2>
+      <v-chip class="ml-3" color="success">
+        <v-avatar left>
+          <v-icon>mdi-cash-multiple</v-icon>
+        </v-avatar>
+        15 + 24 = 76
+      </v-chip>
+    </div>
     <v-timeline v-if="stages[0]" dense >
       <v-timeline-item small v-for="(item, i) in stages" :key="i">
         <v-card class="elevation-2">
-          <v-card-title style="display: flex; justify-content: space-between">
-            <div style="display: flex; align-items: center">
-              <div>{{i + 1}}</div>
-              <dialog-add-works
-                class="ml-2 mb-1"
-                title="добавить работы"
-                :fullList="listLabor"
-                :listSelected="[...item.list]"
-                :stageIndex="i"
-                titleCard="Список работ"
-                :addList="addListLabor"
-              />
-              <div>
-                <dialog-add-groups
-                  title="добавить группы работ"
-                  titleCard="Список групп работ"
-                  :fullList="listGroup"
-                  :listSelected="[...item.groups]"
+          <v-card-title
+            style="position: relative; display: flex; justify-content: space-between"
+          >
+            <v-row>
+              <v-col style="display: flex; align-items: center" cols="9">
+                <div>Этап {{i + 1}}</div>
+                <dialog-add-works
+                  class="ml-2 mb-1"
+                  title="добавить работы"
+                  :fullList="listLabor"
+                  :listSelected="[...item.list]"
                   :stageIndex="i"
-                  :addList="addListGroup"
+                  titleCard="Список работ"
+                  :addList="addListLabor"
                 />
-              </div>
-              <v-btn class="ml-2" color="primary" :disabled="!valid" x-small>сохранить</v-btn>
-            </div>
-            <v-btn v-if="i === stages.length - 1 & i !== 0" icon @click="deleteStage">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
+                <div>
+                  <dialog-add-groups
+                    title="добавить группы работ"
+                    titleCard="Список групп работ"
+                    :fullList="listGroup"
+                    :listSelected="[...item.groups]"
+                    :stageIndex="i"
+                    :addList="addListGroup"
+                  />
+                </div>
+                <v-btn class="ml-2" color="primary" :disabled="!valid" x-small>сохранить</v-btn>
+              </v-col>
+              <v-col cols="3" style="display: flex; align-items: center; justify-content: flex-end">
+                <v-chip color="success">
+                  <v-avatar left>
+                    <v-icon>mdi-cash-multiple</v-icon>
+                  </v-avatar>
+                  15 + 24 = 76
+                </v-chip>
+                <v-btn
+                  class="ml-2"
+                  v-if="i === stages.length - 1 & i !== 0"
+                  icon
+                  @click="deleteStage"
+                >
+                  <v-icon>mdi-close</v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
           </v-card-title>
-          <v-card-text>
+          <v-card-text >
             <div v-if="item.list[0] || item.groups[0]">
               <v-simple-table>
                 <template v-slot:default>
@@ -194,11 +220,11 @@ export default {
     },
     addStage() {
       this.stages = [...this.stages, { list: [], groups: [] }];
-      // this.actions.addStage({
-      //   id: 0,
-      //   nirID: this.data.nirId,
-      //   stageID,
-      // });
+      this.actions.addStage({
+        id: 0,
+        nirID: this.data.nir.id,
+        stageID: 2,
+      });
     },
     addListLabor(index, list) {
       this.stages[index].list = list;
@@ -246,5 +272,17 @@ export default {
   flex-direction: column;
   justify-content: center;
   font-size: 24px;
+}
+.v-sheet--offset {
+  top: -24px;
+}
+.volume {
+  height: 70px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  top: -15px;
 }
 </style>

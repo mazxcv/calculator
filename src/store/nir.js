@@ -11,6 +11,7 @@ export default {
     createdNirId: '',
   },
   getters: {
+    CURRENT_NIR: (state) => state.currentNir,
     NIR_LIST: (state) => state.nirList,
     CREATED_NIR_ID: (state) => state.createdNirId,
   },
