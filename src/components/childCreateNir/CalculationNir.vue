@@ -6,7 +6,7 @@
         <v-avatar left>
           <v-icon>mdi-cash-multiple</v-icon>
         </v-avatar>
-        15 + 24 = 76
+        {{volumeNir.toFixed(3)}}
       </v-chip>
     </div>
     <v-timeline v-if="stages[0]" dense >
@@ -44,7 +44,9 @@
                   <v-avatar left>
                     <v-icon>mdi-cash-multiple</v-icon>
                   </v-avatar>
-                  15 + 24 = 76
+                  {{`${(sumLabor[i]).toFixed(3)} *
+                  ${item.innovationRate.value ? item.innovationRate.value : 0}
+                  = ${(volumeLaborStages[i]).toFixed(3)}`}}
                 </v-chip>
                 <v-btn
                   class="ml-2"
@@ -59,73 +61,98 @@
           </v-card-title>
           <v-card-text >
             <div v-if="item.list[0] || item.groups[0]">
-              <v-expansion-panels flat>
+              <v-expansion-panels
+                flat
+                multiple
+                hover
+                accordion
+                focusable
+              >
                 <v-expansion-panel>
                   <v-expansion-panel-header>
                     <div style="display: flex; align-items: center">
                       Коффициент новизны:
                       <v-icon
-                        v-if="!nirInnovationRate"
+                        v-if="!item.innovationRate.value"
                         class="ml-2"
                         color="warning"
                       >
                         mdi-alert-circle
                       </v-icon>
+                      <div class="ml-2">{{item.innovationRate.value}}</div>
                     </div>
                   </v-expansion-panel-header>
                   <v-expansion-panel-content>
                     <novelty-rate
-                      :saveInnovationRate="saveInnovationRate"
+                      :saveInnovationRate="addInnovationRateStage"
                       :listLabor="sortListLabor"
-                      :nirInnovationRate="nirInnovationRate"
+                      :nirInnovationRate="item.innovationRate"
+                      :stageId="i"
                     />
                   </v-expansion-panel-content>
                 </v-expansion-panel>
-              </v-expansion-panels>
 
-              <v-simple-table>
-                <template v-slot:default>
-                  <thead>
-                  <tr>
-                    <th style="width: 75%" class="text-left">Виды работ</th>
-                    <th style="width: 20%" class="text-left">Трудоемкость</th>
-                    <th class="text-left">Действия</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr v-for="(el, j) in item.list" :key="j">
-                    <td >{{ el.name }}</td>
-                    <td style="display: flex; align-items: center">
-                      <v-slider
-                        style="width: 80%"
-                        :step="el.step"
-                        tick-size="3"
-                        ticks="always"
-                        :min="el.minVolume"
-                        :max="el.overMax"
-                        :color="colorSlider(el.maxVolume, item.list[j].volume)"
-                        track-color="grey"
-                        dense
-                        single-line
-                        hide-details
-                        thumb-label
-                        v-model="item.list[j].volume"
+                <v-expansion-panel>
+                  <v-expansion-panel-header>
+                    <div style="display: flex; align-items: center">
+                      Объем работ:
+                      <v-icon
+                        v-if="!sumLabor[i]"
+                        class="ml-2"
+                        color="warning"
                       >
-                        <template v-slot:thumb-label="{ value }">
-                          {{ value.toFixed(3) }}
-                        </template>
-                      </v-slider>
-                      <div class="pl-1" style="width: 20%">{{el.volume.toFixed(2)}}</div>
-                    </td>
-                    <td>
-                      <v-btn @click="deleteElementList(i, el.id)" icon x-small color="error">
-                        <v-icon>mdi-close</v-icon>
-                      </v-btn>
-                    </td>
-                  </tr>
-                  </tbody>
-                </template>
-              </v-simple-table>
+                        mdi-alert-circle
+                      </v-icon>
+                      <div class="ml-2">{{sumLabor[i].toFixed(3)}}</div>
+                    </div>
+                  </v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    <v-simple-table>
+                      <template v-slot:default>
+                        <thead>
+                        <tr>
+                          <th style="width: 75%" class="text-left">Виды работ</th>
+                          <th style="width: 20%" class="text-left">Трудоемкость</th>
+                          <th class="text-left">Действия</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(el, j) in item.list" :key="j">
+                          <td >{{ el.name }}</td>
+                          <td style="display: flex; align-items: center">
+                            <v-slider
+                              style="width: 80%"
+                              :step="el.step"
+                              tick-size="3"
+                              ticks="always"
+                              :min="el.minVolume"
+                              :max="el.overMax"
+                              :color="colorSlider(el.maxVolume, item.list[j].volume)"
+                              track-color="grey"
+                              dense
+                              single-line
+                              hide-details
+                              thumb-label
+                              v-model="item.list[j].volume"
+                            >
+                              <template v-slot:thumb-label="{ value }">
+                                {{ value.toFixed(3) }}
+                              </template>
+                            </v-slider>
+                            <div class="pl-1" style="width: 20%">{{el.volume.toFixed(2)}}</div>
+                          </td>
+                          <td>
+                            <v-btn @click="deleteElementList(i, el.id)" icon x-small color="error">
+                              <v-icon>mdi-close</v-icon>
+                            </v-btn>
+                          </td>
+                        </tr>
+                        </tbody>
+                      </template>
+                    </v-simple-table>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+              </v-expansion-panels>
               <h4 v-if="item.groups[0]" class="mt-5">Группы работ:</h4>
               <v-expansion-panels
                 flat
@@ -236,11 +263,12 @@ export default {
   },
   data() {
     return {
-      nirInnovationRate: '',
+      nirInnovationRate: {},
       valid: true,
       stages: [{
         list: [],
         groups: [],
+        innovationRate: {},
       }],
     };
   },
@@ -248,16 +276,30 @@ export default {
     sortListLabor() {
       return sortListInnovationRate(this.data.listNirInnovationRate);
     },
+    sumLabor() {
+      return this.stages.map((stage) => stage.list.reduce((acc, el) => acc + el.volume, 0));
+    },
+    volumeLaborStages() {
+      return this.stages.map((stage, i) => {
+        if (stage.innovationRate.value) {
+          return stage.innovationRate.value * this.sumLabor[i];
+        }
+        return 0;
+      });
+    },
+    volumeNir() {
+      return this.volumeLaborStages.reduce((acc, el) => acc + el, 0);
+    },
   },
   methods: {
-    saveInnovationRate(item) {
-      this.nirInnovationRate = item;
+    addInnovationRateStage(item, stageId) {
+      this.stages[stageId].innovationRate = item;
     },
     colorSlider(maxValue, value) {
       return value > maxValue ? 'error' : 'primary';
     },
     addStage() {
-      this.stages = [...this.stages, { list: [], groups: [] }];
+      this.stages = [...this.stages, { list: [], groups: [], innovationRate: {} }];
       this.actions.addStage({
         id: 0,
         nirID: this.data.nir.id,

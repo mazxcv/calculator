@@ -93,11 +93,6 @@
               </v-col>
             </v-row>
           </v-form>
-          <novelty-rate
-            :saveInnovationRate="saveInnovationRate"
-            :listLabor="sortListLabor"
-            :nirInnovationRate="nirInnovationRate"
-          />
         </v-card-text>
 
         <v-card-actions>
@@ -106,7 +101,7 @@
             color="primary"
             text
             @click="createNir"
-            :disabled="!valid || !nirInnovationRate"
+            :disabled="!valid"
           >
             Создать
           </v-btn>
@@ -125,27 +120,23 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
-import NoveltyRate from '../childCreateNir/NoveltyRate.vue';
 import sortListInnovationRate from '../../utils/helpers';
 
 export default {
   name: 'DialogCreateNir.vue',
-  components: {
-    NoveltyRate,
-  },
   mounted() {
     this.GET_LIST_NIR_INNOVATION_RATE();
   },
   data() {
+    const d = new Date();
     return {
       valid: true,
       name: '',
-      duration: 0,
+      duration: 12,
       menuFrom: false,
       menuTo: false,
-      dateFrom: new Date().toISOString().substr(0, 10),
-      dateTo: new Date().toISOString().substr(0, 10),
-      nirInnovationRate: '',
+      dateFrom: d.toISOString().substr(0, 10),
+      dateTo: d.toISOString().substr(0, 10),
       dialog: false,
     };
   },
@@ -168,18 +159,15 @@ export default {
   },
   methods: {
     ...mapActions(['GET_LIST_NIR_INNOVATION_RATE', 'CREATE_NIR']),
-    saveInnovationRate(item) {
-      this.nirInnovationRate = item;
-    },
     async createNir() {
       await this.CREATE_NIR({
-        id: 0,
         name: this.name,
-        nirInnovationPropertyID: this.nirInnovationRate.nirInnovationPropertyID,
-        nirScaleID: this.nirInnovationRate.nirScaleID,
+        dateFrom: this.dateFrom,
+        dateTo: this.dateTo,
+        intensiveRateValue: this.intensiveRate,
+        analogDurationMonthes: this.duration,
         createTime: new Date(),
       });
-      console.log('id:', this.CREATED_NIR_ID);
       this.$router.push(`/list-nir/edit/${this.CREATED_NIR_ID}`);
       this.dialog = false;
     },

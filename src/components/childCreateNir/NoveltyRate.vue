@@ -37,7 +37,7 @@
         >
           <v-btn
             v-bind:class="{ btn: nirInnovationRate.id === item.id }"
-            @click="saveInnovationRate(item)"
+            @click="saveInnovationRate(item, stageId)"
             color="primary"
             style="height: 100%; width: 100%"
             text
@@ -57,6 +57,7 @@ export default {
     saveInnovationRate: Function,
     listLabor: Array,
     nirInnovationRate: Object,
+    stageId: Number,
   },
 };
 </script>
