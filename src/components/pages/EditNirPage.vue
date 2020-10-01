@@ -11,7 +11,7 @@
         listNirInnovationRate: LIST_NIR_INNOVATION_RATE,
       }"
       :actions="{
-        addStage: REG_NIR_STAGE,
+        saveStage: ADD_NIR_STAGE,
       }"
     />
   </div>
@@ -32,7 +32,6 @@ export default {
     this.GET_NIR_GROUP_LIST();
     this.GET_LIST_NIR_INNOVATION_RATE();
     this.GET_NIR_CURRENT(this.nirId);
-    this.GET_CURRENT_STAGES(this.nirId);
   },
   data() {
     return {
@@ -54,8 +53,8 @@ export default {
       'GET_NIR_CURRENT',
       'GET_CURRENT_STAGES',
       'GET_NIR_GROUP_LIST',
-      'REG_NIR_STAGE',
       'GET_LIST_NIR_INNOVATION_RATE',
+      'ADD_NIR_STAGE',
     ]),
   },
 };

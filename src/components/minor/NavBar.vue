@@ -1,7 +1,9 @@
 <template>
   <v-card class="bar">
       <div>
-        <v-card-title>Калькулятор трудозатрат</v-card-title>
+        <v-card-title class="text-medium" style="font-size: 18px">
+          Калькулятор трудозатрат
+        </v-card-title>
         <v-divider></v-divider>
         <v-card-text>
           <v-list dense nav>

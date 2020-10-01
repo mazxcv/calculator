@@ -19,8 +19,9 @@ export default {
     SET_NIR_LIST: (state, list) => {
       state.nirList = list.map((el) => ({
         ...el,
-        createTime: moment(el.createTime).format('MMM DD YYYY, HH:mm'),
-        updateTime: moment(el.createTime).format('MMM DD YYYY, HH:mm'),
+        createTime: moment(el.createTime).format('DD MMM YYYY, HH:mm'),
+        dateFrom: moment(el.dateFrom).format('DD MMM YYYY'),
+        dateTo: moment(el.dateTo).format('DD MMM YYYY'),
       }));
     },
     SET_NIR_CURRENT: (state, nir) => {

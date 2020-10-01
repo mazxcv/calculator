@@ -24,8 +24,8 @@ export default {
     },
   },
   actions: {
-    REG_NIR_STAGE: async (context, payload) => {
-      await axios.post(`${HOST}/NirStageReg`, payload)
+    ADD_NIR_STAGE: async (context, payload) => {
+      await axios.post(`${HOST}/NirStage`, payload)
         .then((res) => {
           console.log(res);
         })

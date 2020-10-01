@@ -11,7 +11,7 @@
           hide-details
           rounded
           dense
-          placeholder="Search"
+          placeholder="Поиск"
           filled
           v-model="search"
           append-icon="mdi-magnify"

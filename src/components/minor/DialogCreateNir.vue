@@ -136,7 +136,9 @@ export default {
       menuFrom: false,
       menuTo: false,
       dateFrom: d.toISOString().substr(0, 10),
-      dateTo: d.toISOString().substr(0, 10),
+      year: d.getMonth(),
+      dateTo: new Date((d.getFullYear() + 1).toString(),
+        d.getMonth().toString()).toISOString().substr(0, 10),
       dialog: false,
     };
   },
@@ -166,7 +168,6 @@ export default {
         dateTo: this.dateTo,
         intensiveRateValue: this.intensiveRate,
         analogDurationMonthes: this.duration,
-        createTime: new Date(),
       });
       this.$router.push(`/list-nir/edit/${this.CREATED_NIR_ID}`);
       this.dialog = false;

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="display: flex">
+    <div class="text-bold" style="display: flex">
       <h2 class="text--secondary">{{data.nir.name}} </h2>
       <v-chip class="ml-3" outlined color="success">
         <v-avatar left>
@@ -17,7 +17,7 @@
           >
             <v-row>
               <v-col style="display: flex; align-items: center" cols="9">
-                <div>Этап {{i + 1}}</div>
+                <div class="text-medium">Этап {{i + 1}}</div>
                 <dialog-add-works
                   class="ml-2 mb-1"
                   title="добавить работы"
@@ -37,10 +37,29 @@
                     :addList="addListGroup"
                   />
                 </div>
-                <v-btn class="ml-2" color="primary" :disabled="!valid" x-small>сохранить</v-btn>
+                <v-btn
+                  class="ml-2"
+                  color="primary"
+                  :disabled="!valid"
+                  @click="actions.saveStage({
+                    code: i + 1,
+                    name: `Этап ${i + 1}`,
+                    nirInnovationRateId: item.innovationRate.id,
+                    dateFrom: new Date(),
+                    dateTo: new Date(),
+                    nirId: data.nirId,
+                    laborVolumes: item.list.map((el) => ({
+                      laborID: el.id,
+                      volume: el.volume,
+                    })),
+                  })"
+                  x-small
+                >
+                  сохранить
+                </v-btn>
               </v-col>
               <v-col cols="3" style="display: flex; align-items: center; justify-content: flex-end">
-                <v-chip outlined color="success">
+                <v-chip class="text-medium" outlined color="success">
                   <v-avatar left>
                     <v-icon>mdi-cash-multiple</v-icon>
                   </v-avatar>
@@ -69,8 +88,8 @@
                 focusable
               >
                 <v-expansion-panel>
-                  <v-expansion-panel-header>
-                    <div style="display: flex; align-items: center">
+                  <v-expansion-panel-header >
+                    <div class="text-medium" style="display: flex; align-items: center">
                       Коффициент новизны:
                       <v-icon
                         v-if="!item.innovationRate.value"
@@ -79,7 +98,7 @@
                       >
                         mdi-alert-circle
                       </v-icon>
-                      <div class="ml-2">{{item.innovationRate.value}}</div>
+                      <div class="text-medium ml-2">{{item.innovationRate.value}}</div>
                     </div>
                   </v-expansion-panel-header>
                   <v-expansion-panel-content>
@@ -93,8 +112,8 @@
                 </v-expansion-panel>
 
                 <v-expansion-panel>
-                  <v-expansion-panel-header>
-                    <div style="display: flex; align-items: center">
+                  <v-expansion-panel-header >
+                    <div class="text-medium" style="display: flex; align-items: center">
                       Объем работ:
                       <v-icon
                         v-if="!sumLabor[i]"
@@ -103,7 +122,7 @@
                       >
                         mdi-alert-circle
                       </v-icon>
-                      <div class="ml-2">{{sumLabor[i].toFixed(3)}}</div>
+                      <div v-else class="text-medium ml-2">{{sumLabor[i].toFixed(3)}}</div>
                     </div>
                   </v-expansion-panel-header>
                   <v-expansion-panel-content>
@@ -220,7 +239,7 @@
               class="ma-3 mb-6 inf-block"
             >
               <v-icon class="icon-info">mdi-playlist-plus</v-icon>
-              <div style="display: flex; justify-content: center">
+              <div class="text-bold" style="display: flex; justify-content: center">
                 Добавьте работы
               </div>
 
@@ -253,7 +272,6 @@ export default {
     listGroup: Array,
     actions: Object,
     data: Object,
-    nirId: Number,
   },
   components: {
     DialogAddWorks,
@@ -300,11 +318,6 @@ export default {
     },
     addStage() {
       this.stages = [...this.stages, { list: [], groups: [], innovationRate: {} }];
-      this.actions.addStage({
-        id: 0,
-        nirID: this.data.nir.id,
-        stageID: 2,
-      });
     },
     addListLabor(index, list) {
       this.stages[index].list = list;
