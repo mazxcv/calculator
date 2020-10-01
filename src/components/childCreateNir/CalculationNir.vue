@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="data.nir.stages">
     <div class="text-bold" style="display: flex">
       <h2 class="text--secondary">{{data.nir.name}} </h2>
       <v-chip class="ml-3" outlined color="success">
@@ -9,8 +9,8 @@
         {{volumeNir.toFixed(3)}}
       </v-chip>
     </div>
-    <v-timeline v-if="stages[0]" dense >
-      <v-timeline-item small v-for="(item, i) in stages" :key="i">
+    <v-timeline v-if="data.nir.stages[0]" dense >
+      <v-timeline-item small v-for="(item, i) in data.nir.stages" :key="i">
         <v-card class="elevation-2">
           <v-card-title
             style="position: relative; display: flex; justify-content: space-between"
@@ -22,12 +22,12 @@
                   class="ml-2 mb-1"
                   title="добавить работы"
                   :fullList="listLabor"
-                  :listSelected="[...item.list]"
+                  :listSelected="[...item.laborVolumes]"
                   :stageIndex="i"
                   titleCard="Список работ"
                   :addList="addListLabor"
                 />
-                <div>
+           <!--     <div>
                   <dialog-add-groups
                     title="добавить группы работ"
                     titleCard="Список групп работ"
@@ -36,7 +36,8 @@
                     :stageIndex="i"
                     :addList="addListGroup"
                   />
-                </div>
+                </div>-->
+
                 <v-btn
                   class="ml-2"
                   color="primary"
@@ -44,11 +45,11 @@
                   @click="actions.saveStage({
                     code: i + 1,
                     name: `Этап ${i + 1}`,
-                    nirInnovationRateId: item.innovationRate.id,
+                    nirInnovationRateId: item.nirInnovationRateID,
                     dateFrom: new Date(),
                     dateTo: new Date(),
                     nirId: data.nirId,
-                    laborVolumes: item.list.map((el) => ({
+                    laborVolumes: item.laborVolumes.map((el) => ({
                       laborID: el.id,
                       volume: el.volume,
                     })),
@@ -64,12 +65,12 @@
                     <v-icon>mdi-cash-multiple</v-icon>
                   </v-avatar>
                   {{`${(sumLabor[i]).toFixed(3)} *
-                  ${item.innovationRate.value ? item.innovationRate.value : 0}
+                  ${item.nirInnovationRateValue}
                   = ${(volumeLaborStages[i]).toFixed(3)}`}}
                 </v-chip>
                 <v-btn
                   class="ml-2"
-                  v-if="i === stages.length - 1 & i !== 0"
+                  v-if="i === data.nir.stages.length - 1 & i !== 0"
                   icon
                   @click="deleteStage"
                 >
@@ -79,7 +80,7 @@
             </v-row>
           </v-card-title>
           <v-card-text >
-            <div v-if="item.list[0] || item.groups[0]">
+            <div v-if="item.laborVolumes[0]">
               <v-expansion-panels
                 flat
                 multiple
@@ -92,20 +93,20 @@
                     <div class="text-medium" style="display: flex; align-items: center">
                       Коффициент новизны:
                       <v-icon
-                        v-if="!item.innovationRate.value"
+                        v-if="!item.nirInnovationRateValue"
                         class="ml-2"
                         color="warning"
                       >
                         mdi-alert-circle
                       </v-icon>
-                      <div class="text-medium ml-2">{{item.innovationRate.value}}</div>
+                      <div v-else class="text-medium ml-2">{{item.nirInnovationRateValue}}</div>
                     </div>
                   </v-expansion-panel-header>
                   <v-expansion-panel-content>
                     <novelty-rate
                       :saveInnovationRate="addInnovationRateStage"
                       :listLabor="sortListLabor"
-                      :nirInnovationRate="item.innovationRate"
+                      :nirInnovationRateID="item.nirInnovationRateID"
                       :stageId="i"
                     />
                   </v-expansion-panel-content>
@@ -136,23 +137,23 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr v-for="(el, j) in item.list" :key="j">
-                          <td >{{ el.name }}</td>
+                        <tr v-for="(el, j) in item.laborVolumes ? item.laborVolumes : []" :key="j">
+                          <td >{{ el.labor.name }}</td>
                           <td style="display: flex; align-items: center">
                             <v-slider
                               style="width: 80%"
-                              :step="el.step"
+                              :step="el.labor.step"
                               tick-size="3"
                               ticks="always"
-                              :min="el.minVolume"
-                              :max="el.overMax"
-                              :color="colorSlider(el.maxVolume, item.list[j].volume)"
+                              :min="el.labor.minVolume"
+                              :max="el.labor.overMax"
+                              :color="colorSlider(el.labor.maxVolume, item.laborVolumes[j].volume)"
                               track-color="grey"
                               dense
                               single-line
                               hide-details
                               thumb-label
-                              v-model="item.list[j].volume"
+                              v-model="item.laborVolumes[j].volume"
                             >
                               <template v-slot:thumb-label="{ value }">
                                 {{ value.toFixed(3) }}
@@ -172,67 +173,67 @@
                   </v-expansion-panel-content>
                 </v-expansion-panel>
               </v-expansion-panels>
-              <h4 v-if="item.groups[0]" class="mt-5">Группы работ:</h4>
-              <v-expansion-panels
-                flat
-                multiple
-                hover
-                accordion
-                focusable
-              >
-                <v-expansion-panel
-                  :readonly="!group.list[0]" v-for="(group, j) in item.groups"
-                  :key="j"
-                >
-                  <v-expansion-panel-header>
-                    <div>
-                      <div style="display: flex" class="mb-2">
-                        <dialog-add-works-from-group
-                          :activeClass="false"
-                          title="добавить работы"
-                          titleCard="Список работ"
-                          :listSelected="[...item.groups[j].list]"
-                          :stageIndex="i"
-                          :groupIndex="j"
-                          :groupId="group.id"
-                          :addList="addListLaborToGroup"
-                        />
-                        <v-btn
-                          @click.stop="deleteGroup(i, group.id)"
-                          class="ml-2"
-                          x-small
-                          outlined
-                          color="error"
-                        >
-                          Удалить группу
-                        </v-btn>
-                      </div>
-                      {{group.name}}
-                    </div>
-                  </v-expansion-panel-header>
-                  <v-expansion-panel-content>
-                    <v-simple-table>
-                      <template>
-                        <thead>
-                        <tr>
-                          <th style="width: 75%" class="text-left">Виды работ</th>
-                          <th style="width: 20%" class="text-left">Трудоемкость</th>
-                          <th class="text-left">Действия</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="(labor, key) in group.list" :key="key">
-                          <td >{{labor.name}}</td>
-                          <td >test1</td>
-                          <td >test2</td>
-                        </tr>
-                        </tbody>
-                      </template>
-                    </v-simple-table>
-                  </v-expansion-panel-content>
-                  <v-divider v-if="j !== item.groups.length - 1"/>
-                </v-expansion-panel>
-              </v-expansion-panels>
+              <!--<h4 v-if="item.groups[0]" class="mt-5">Группы работ:</h4>-->
+              <!--<v-expansion-panels-->
+                <!--flat-->
+                <!--multiple-->
+                <!--hover-->
+                <!--accordion-->
+                <!--focusable-->
+              <!--&gt;-->
+                <!--<v-expansion-panel-->
+                  <!--:readonly="!group.list[0]" v-for="(group, j) in item.groups"-->
+                  <!--:key="j"-->
+                <!--&gt;-->
+                  <!--<v-expansion-panel-header>-->
+                    <!--<div>-->
+                      <!--<div style="display: flex" class="mb-2">-->
+                        <!--<dialog-add-works-from-group-->
+                          <!--:activeClass="false"-->
+                          <!--title="добавить работы"-->
+                          <!--titleCard="Список работ"-->
+                          <!--:listSelected="[...item.groups[j].list]"-->
+                          <!--:stageIndex="i"-->
+                          <!--:groupIndex="j"-->
+                          <!--:groupId="group.id"-->
+                          <!--:addList="addListLaborToGroup"-->
+                        <!--/>-->
+                        <!--<v-btn-->
+                          <!--@click.stop="deleteGroup(i, group.id)"-->
+                          <!--class="ml-2"-->
+                          <!--x-small-->
+                          <!--outlined-->
+                          <!--color="error"-->
+                        <!--&gt;-->
+                          <!--Удалить группу-->
+                        <!--</v-btn>-->
+                      <!--</div>-->
+                      <!--{{group.name}}-->
+                    <!--</div>-->
+                  <!--</v-expansion-panel-header>-->
+                  <!--<v-expansion-panel-content>-->
+                    <!--<v-simple-table>-->
+                      <!--<template>-->
+                        <!--<thead>-->
+                        <!--<tr>-->
+                          <!--<th style="width: 75%" class="text-left">Виды работ</th>-->
+                          <!--<th style="width: 20%" class="text-left">Трудоемкость</th>-->
+                          <!--<th class="text-left">Действия</th>-->
+                        <!--</tr>-->
+                        <!--</thead>-->
+                        <!--<tbody>-->
+                        <!--<tr v-for="(labor, key) in group.list" :key="key">-->
+                          <!--<td >{{labor.name}}</td>-->
+                          <!--<td >test1</td>-->
+                          <!--<td >test2</td>-->
+                        <!--</tr>-->
+                        <!--</tbody>-->
+                      <!--</template>-->
+                    <!--</v-simple-table>-->
+                  <!--</v-expansion-panel-content>-->
+                  <!--<v-divider v-if="j !== item.groups.length - 1"/>-->
+                <!--</v-expansion-panel>-->
+              <!--</v-expansion-panels>-->
             </div>
             <div
               v-else
@@ -249,7 +250,8 @@
       </v-timeline-item>
     </v-timeline>
     <v-btn
-      :disabled="stages[0] ? !stages[stages.length - 1].list[0] : false"
+      :disabled="data.nir.stages[0]
+       ? !data.nir.stages[data.nir.stages.length - 1].laborVolumes[0] : false"
       color="primary"
       @click="addStage()"
     >
@@ -260,8 +262,6 @@
 
 <script>
 import DialogAddWorks from '../minor/DialogAddWorks.vue';
-import DialogAddGroups from '../minor/DialogAddGroups.vue';
-import DialogAddWorksFromGroup from '../minor/DialogAddWorksFromGroup.vue';
 import NoveltyRate from './NoveltyRate.vue';
 import sortListInnovationRate from '../../utils/helpers';
 
@@ -275,9 +275,10 @@ export default {
   },
   components: {
     DialogAddWorks,
-    DialogAddGroups,
-    DialogAddWorksFromGroup,
     NoveltyRate,
+  },
+  mounted() {
+    console.log(this.data.nir);
   },
   data() {
     return {
@@ -295,12 +296,13 @@ export default {
       return sortListInnovationRate(this.data.listNirInnovationRate);
     },
     sumLabor() {
-      return this.stages.map((stage) => stage.list.reduce((acc, el) => acc + el.volume, 0));
+      return this.data.nir.stages
+        .map((stage) => stage.laborVolumes.reduce((acc, el) => acc + el.volume, 0));
     },
     volumeLaborStages() {
-      return this.stages.map((stage, i) => {
-        if (stage.innovationRate.value) {
-          return stage.innovationRate.value * this.sumLabor[i];
+      return this.data.nir.stages.map((stage, i) => {
+        if (stage.nirInnovationRateValue) {
+          return stage.nirInnovationRateValue * this.sumLabor[i];
         }
         return 0;
       });
@@ -311,26 +313,45 @@ export default {
   },
   methods: {
     addInnovationRateStage(item, stageId) {
-      this.stages[stageId].innovationRate = item;
+      this.data.nir.stages[stageId].nirInnovationRateID = item.id;
+      this.data.nir.stages[stageId].nirInnovationRateValue = item.value;
     },
     colorSlider(maxValue, value) {
       return value > maxValue ? 'error' : 'primary';
     },
     addStage() {
-      this.stages = [...this.stages, { list: [], groups: [], innovationRate: {} }];
+      this.data.nir.stages = [
+        ...this.data.nir.stages,
+        {
+          laborVolumes: [],
+          nirInnovationRateID: null,
+          nirInnovationRateValue: 0,
+          volume: 0,
+        },
+      ];
     },
     addListLabor(index, list) {
-      this.stages[index].list = list;
+      const modList = list.map((el) => ({
+        ...el,
+        labor: {
+          maxVolume: el.maxVolume,
+          minVolume: el.minVolume,
+          name: el.name,
+          overMax: el.overMax,
+          step: el.step,
+        },
+      }));
+      this.data.nir.stages[index].laborVolumes = modList;
     },
     addListLaborToGroup(indexStage, indexGroup, list) {
       this.stages[indexStage].groups[indexGroup].list = list;
     },
-    addListGroup(index, groups) {
-      this.stages[index].groups = groups.map((el) => ({
-        ...el,
-        list: [],
-      }));
-    },
+    // addListGroup(index, groups) {
+    //   this.stages[index].groups = groups.map((el) => ({
+    //     ...el,
+    //     list: [],
+    //   }));
+    // },
     deleteStage() {
       this.stages.pop();
     },

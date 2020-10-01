@@ -36,7 +36,7 @@
           cols="4"
         >
           <v-btn
-            v-bind:class="{ btn: nirInnovationRate.id === item.id }"
+            v-bind:class="{ btn: nirInnovationRateID === item.id }"
             @click="saveInnovationRate(item, stageId)"
             color="primary"
             style="height: 100%; width: 100%"
@@ -56,7 +56,7 @@ export default {
   props: {
     saveInnovationRate: Function,
     listLabor: Array,
-    nirInnovationRate: Object,
+    nirInnovationRateID: Number,
     stageId: Number,
   },
 };

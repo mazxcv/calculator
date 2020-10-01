@@ -25,7 +25,29 @@ export default {
       }));
     },
     SET_NIR_CURRENT: (state, nir) => {
-      state.currentNir = nir;
+      const modStages = nir.stages ? nir.stages.map((stage) => ({
+        ...stage,
+        laborVolumes: stage.laborVolumes.map((el) => ({
+          ...el,
+          labor: {
+            ...el.labor,
+            step: (el.labor.maxVolume - el.labor.minVolume) / 10,
+            overMax: el.labor.maxVolume + (((el.labor.maxVolume - el.labor.minVolume) / 10) * 3),
+          },
+        })),
+      })) : [];
+      console.log('modStages', modStages);
+      if (nir.stages[0]) {
+        state.currentNir = { ...nir, stages: modStages };
+      } else {
+        const stages = [{
+          laborVolumes: [],
+          nirInnovationRateID: null,
+          nirInnovationRateValue: 0,
+          volume: 0,
+        }];
+        state.currentNir = { ...nir, stages };
+      }
     },
     ADD_NEW_NIR: (state, nir) => {
       state.createdNirId = nir.id;
