@@ -1,4 +1,6 @@
-export default (list) => [...list]
+import _ from 'lodash';
+
+export const sortListInnovationRate = (list) => [...list]
   .sort((a, b) => {
     if (a.nirScaleID > b.nirScaleID) {
       return 1;
@@ -15,3 +17,23 @@ export default (list) => [...list]
     }
     return 0;
   });
+
+export const minStagesData = (stages) => stages.map((stage) => ({
+  id: stage.id,
+  volume: stage.volume.toFixed(4),
+  nirInnovationRateID: stage.nirInnovationRateID,
+  labors: stage.laborVolumes.map((labor) => ({
+    id: labor.id,
+    volume: labor.volume.toFixed(4),
+  })),
+}));
+
+export const compare = (arr1, arr2) => {
+  const d1 = minStagesData(arr1);
+  const d2 = minStagesData(arr2);
+  const resArr = [];
+  for (let i = 0; i < d1.length; i += 1) {
+    resArr.push(_.isEqual(d1[i], d2[i]));
+  }
+  return resArr;
+};

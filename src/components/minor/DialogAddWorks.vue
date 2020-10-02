@@ -69,8 +69,7 @@ export default {
   data() {
     return {
       dialog: false,
-      listGroup: [],
-      items: [],
+      list: [],
     };
   },
   props: {
@@ -85,16 +84,23 @@ export default {
   computed: {
     checkboxes() {
       return this.fullList
-        .map((el) => this.listSelected.find((selected) => selected.id === el.id));
+        .map((el) => this.listSelected.find((selected) => selected.labor.id === el.id));
     },
+    // filterList() {
+    //   console.log('fullList1', this.fullList);
+    //   console.log('listSelected', this.listSelected);
+    //   let res = [...this.fullList];
+    //   this.listSelected.forEach((el) => {
+    //     res = res.filter((item) => item.id !== el.labor.id);
+    //   });
+    //   console.log('fullList', res);
+    //   return res;
+    // },
   },
   methods: {
     saveList() {
       if (this.groupIndex === undefined) {
-        this.addList(this.stageIndex, this.listSelected.map((el) => ({
-          ...el,
-          stageIndex: this.stageIndex,
-        })));
+        this.addList(this.stageIndex, this.listSelected);
       } else {
         this.addList(this.stageIndex, this.groupIndex, this.listSelected.map((el) => ({
           ...el,
@@ -104,11 +110,23 @@ export default {
       this.dialog = false;
     },
     modList(item) {
-      const index = this.listSelected.findIndex((el) => el.id === item.id);
+      const index = this.listSelected.findIndex((el) => el.labor.id === item.id);
       if (index >= 0) {
         this.listSelected.splice(index, 1);
       } else {
-        this.listSelected.push(item);
+        const modItem = {
+          volume: item.volume,
+          labor: {
+            id: item.id,
+            name: item.name,
+            code: item.code,
+            maxVolume: item.maxVolume,
+            minVolume: item.minVolume,
+            overMax: item.overMax,
+            step: item.step,
+          },
+        };
+        this.listSelected.push(modItem);
       }
     },
   },

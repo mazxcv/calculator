@@ -36,7 +36,6 @@ export default {
           },
         })),
       })) : [];
-      console.log('modStages', modStages);
       if (nir.stages[0]) {
         state.currentNir = { ...nir, stages: modStages };
       } else {
@@ -92,7 +91,6 @@ export default {
         });
     },
     DELETE_NIR: async (context, id) => {
-      console.log(id);
       await axios.delete(`${HOST}/Nir/${id}`)
         .then(() => {
           context.commit('SET_DELETE_TASK', id);

@@ -42,6 +42,15 @@ export default {
           console.log(e);
         });
     },
+    DELETE_NIR_STAGE: async (context, id) => {
+      await axios.delete(`${HOST}/NirStage/${id}`)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
     GET_CURRENT_STAGES: async (context, id) => {
       await axios.get(`${HOST}/Nir/${id}/Stages`)
         .then((res) => {
@@ -51,8 +60,8 @@ export default {
           console.log(e);
         });
     },
-    GET_NIR_STAGE_LIST: async (context) => {
-      await axios.get(`${HOST}/NirStage`)
+    GET_NIR_STAGE_LIST: async (context, id) => {
+      await axios.get(`${HOST}/NirStage?nirId=${id}`)
         .then((res) => {
           context.commit('SET_STAGE_LIST', res.data);
         })

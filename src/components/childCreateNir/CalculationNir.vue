@@ -41,8 +41,8 @@
                 <v-btn
                   class="ml-2"
                   color="primary"
-                  :disabled="!valid"
                   @click="saveStage(item, i)"
+                  :disabled="comparison[i]"
                   x-small
                 >
                   сохранить
@@ -61,7 +61,7 @@
                   class="ml-2"
                   v-if="i === data.nir.stages.length - 1 & i !== 0"
                   icon
-                  @click="deleteStage"
+                  @click="deleteStage(item.id)"
                 >
                   <v-icon>mdi-close</v-icon>
                 </v-btn>
@@ -252,7 +252,7 @@
 <script>
 import DialogAddWorks from '../minor/DialogAddWorks.vue';
 import NoveltyRate from './NoveltyRate.vue';
-import sortListInnovationRate from '../../utils/helpers';
+import { sortListInnovationRate, compare } from '../../utils/helpers';
 
 export default {
   name: 'CalculationNir',
@@ -266,21 +266,16 @@ export default {
     DialogAddWorks,
     NoveltyRate,
   },
-  mounted() {
-    console.log(this.data.nir);
-  },
   data() {
     return {
-      nirInnovationRate: {},
       valid: true,
-      stages: [{
-        list: [],
-        groups: [],
-        innovationRate: {},
-      }],
+      stages: this.data.nir ? this.data.nir.stages : [],
     };
   },
   computed: {
+    comparison() {
+      return compare(this.data.nir.stages, this.data.nirStages, this.data.nir.volume);
+    },
     sortListLabor() {
       return sortListInnovationRate(this.data.listNirInnovationRate);
     },
@@ -310,7 +305,6 @@ export default {
     },
     saveStage(payload, index) {
       if (payload.id) {
-        console.log('test1', payload);
         this.actions.saveStage({
           code: payload.code,
           name: payload.name,
@@ -326,7 +320,6 @@ export default {
           })),
         });
       } else {
-        console.log('test2');
         this.actions.addStage({
           code: index,
           name: `Этап ${index}`,
@@ -353,18 +346,7 @@ export default {
       ];
     },
     addListLabor(index, list) {
-      const modList = list.map((el) => ({
-        volume: el.volume,
-        labor: {
-          maxVolume: el.maxVolume,
-          minVolume: el.minVolume,
-          name: el.name,
-          overMax: el.overMax,
-          step: el.step,
-          id: el.id,
-        },
-      }));
-      this.data.nir.stages[index].laborVolumes = modList;
+      this.data.nir.stages[index].laborVolumes = list;
     },
     addListLaborToGroup(indexStage, indexGroup, list) {
       this.stages[indexStage].groups[indexGroup].list = list;
@@ -375,16 +357,18 @@ export default {
     //     list: [],
     //   }));
     // },
-    deleteStage() {
+    deleteStage(id) {
       this.data.nir.stages.pop();
+      if (id) this.actions.deleteStage(id);
     },
     deleteGroup(indexStage, idGroup) {
       this.stages[indexStage].groups = this.stages[indexStage].groups
         .filter((el) => el.id !== idGroup);
     },
     deleteElementList(stageId, elementId) {
-      const index = this.stages[stageId].list.findIndex((el) => el.id === elementId);
-      this.stages[stageId].list.splice(index, 1);
+      const index = this.data.nir.stages[stageId].laborVolumes
+        .findIndex((el) => el.id === elementId);
+      this.data.nir.stages[stageId].laborVolumes.splice(index, 1);
     },
   },
 };

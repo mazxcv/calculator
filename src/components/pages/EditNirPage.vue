@@ -13,6 +13,7 @@
       :actions="{
         addStage: ADD_NIR_STAGE,
         saveStage: SAVE_NIR_STAGE,
+        deleteStage: DELETE_NIR_STAGE,
       }"
     />
   </div>
@@ -29,7 +30,7 @@ export default {
   },
   mounted() {
     this.GET_LIST_LABOR();
-    this.GET_NIR_STAGE_LIST();
+    this.GET_NIR_STAGE_LIST(this.nirId);
     this.GET_NIR_GROUP_LIST();
     this.GET_LIST_NIR_INNOVATION_RATE();
     this.GET_NIR_CURRENT(this.nirId);
@@ -39,14 +40,16 @@ export default {
       nirId: Number(this.$router.history.current.params.id),
     };
   },
-  computed: mapGetters([
-    'LIST_LABOR',
-    'NIR_STAGE_LIST',
-    'NIR_GROUP_LIST',
-    'CURRENT_STAGES',
-    'CURRENT_NIR',
-    'LIST_NIR_INNOVATION_RATE',
-  ]),
+  computed: {
+    ...mapGetters([
+      'LIST_LABOR',
+      'NIR_STAGE_LIST',
+      'NIR_GROUP_LIST',
+      'CURRENT_STAGES',
+      'CURRENT_NIR',
+      'LIST_NIR_INNOVATION_RATE',
+    ]),
+  },
   methods: {
     ...mapActions([
       'GET_LIST_LABOR',
@@ -57,6 +60,7 @@ export default {
       'GET_LIST_NIR_INNOVATION_RATE',
       'ADD_NIR_STAGE',
       'SAVE_NIR_STAGE',
+      'DELETE_NIR_STAGE',
     ]),
   },
 };
