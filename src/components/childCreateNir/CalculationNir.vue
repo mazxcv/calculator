@@ -42,18 +42,7 @@
                   class="ml-2"
                   color="primary"
                   :disabled="!valid"
-                  @click="actions.saveStage({
-                    code: i + 1,
-                    name: `Этап ${i + 1}`,
-                    nirInnovationRateId: item.nirInnovationRateID,
-                    dateFrom: new Date(),
-                    dateTo: new Date(),
-                    nirId: data.nirId,
-                    laborVolumes: item.laborVolumes.map((el) => ({
-                      laborID: el.id,
-                      volume: el.volume,
-                    })),
-                  })"
+                  @click="saveStage(item, i)"
                   x-small
                 >
                   сохранить
@@ -64,7 +53,7 @@
                   <v-avatar left>
                     <v-icon>mdi-cash-multiple</v-icon>
                   </v-avatar>
-                  {{`${(sumLabor[i]).toFixed(3)} *
+                  {{`${(sumLabor[i]).toFixed(3)} x
                   ${item.nirInnovationRateValue}
                   = ${(volumeLaborStages[i]).toFixed(3)}`}}
                 </v-chip>
@@ -319,6 +308,39 @@ export default {
     colorSlider(maxValue, value) {
       return value > maxValue ? 'error' : 'primary';
     },
+    saveStage(payload, index) {
+      if (payload.id) {
+        console.log('test1', payload);
+        this.actions.saveStage({
+          code: payload.code,
+          name: payload.name,
+          id: payload.id,
+          nirInnovationRateID: payload.nirInnovationRateID,
+          dateFrom: payload.dateFrom,
+          dateTo: payload.dateTo,
+          nirID: this.data.nirId,
+          laborVolumes: payload.laborVolumes.map((el) => ({
+            id: el.id,
+            laborID: el.labor.id,
+            volume: el.volume,
+          })),
+        });
+      } else {
+        console.log('test2');
+        this.actions.addStage({
+          code: index,
+          name: `Этап ${index}`,
+          nirInnovationRateID: payload.nirInnovationRateID,
+          dateFrom: new Date(),
+          dateTo: new Date(),
+          nirID: this.data.nirId,
+          laborVolumes: payload.laborVolumes.map((el) => ({
+            laborID: el.labor.id,
+            volume: el.volume,
+          })),
+        });
+      }
+    },
     addStage() {
       this.data.nir.stages = [
         ...this.data.nir.stages,
@@ -332,13 +354,14 @@ export default {
     },
     addListLabor(index, list) {
       const modList = list.map((el) => ({
-        ...el,
+        volume: el.volume,
         labor: {
           maxVolume: el.maxVolume,
           minVolume: el.minVolume,
           name: el.name,
           overMax: el.overMax,
           step: el.step,
+          id: el.id,
         },
       }));
       this.data.nir.stages[index].laborVolumes = modList;
@@ -353,7 +376,7 @@ export default {
     //   }));
     // },
     deleteStage() {
-      this.stages.pop();
+      this.data.nir.stages.pop();
     },
     deleteGroup(indexStage, idGroup) {
       this.stages[indexStage].groups = this.stages[indexStage].groups

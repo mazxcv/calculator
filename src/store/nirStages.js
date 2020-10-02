@@ -33,6 +33,15 @@ export default {
           console.log(e);
         });
     },
+    SAVE_NIR_STAGE: async (context, payload) => {
+      await axios.put(`${HOST}/NirStage?id=${payload.id}`, payload)
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((e) => {
+          console.log(e);
+        });
+    },
     GET_CURRENT_STAGES: async (context, id) => {
       await axios.get(`${HOST}/Nir/${id}/Stages`)
         .then((res) => {
