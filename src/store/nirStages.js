@@ -1,4 +1,5 @@
 import axios from 'axios';
+import moment from 'moment';
 
 const HOST = process.env.VUE_APP_API || '';
 
@@ -13,7 +14,11 @@ export default {
   },
   mutations: {
     SET_STAGE_LIST: (state, list) => {
-      state.stageList = list;
+      state.stageList = list.map((stage) => ({
+        ...stage,
+        dateFrom: moment(stage.dateFrom).format('YYYY-DD-MM'),
+        dateTo: moment(stage.dateTo).format('YYYY-DD-MM'),
+      }));
     },
     SET_CURRENT_STAGES: (state, list) => {
       state.currentStages = list.map((stage) => ({

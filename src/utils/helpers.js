@@ -21,6 +21,8 @@ export const sortListInnovationRate = (list) => [...list]
 export const minStagesData = (stages) => stages.map((stage) => ({
   id: stage.id,
   volume: stage.volume.toFixed(4),
+  dateFrom: stage.dateFrom,
+  dateTo: stage.dateTo,
   nirInnovationRateID: stage.nirInnovationRateID,
   labors: stage.laborVolumes.map((labor) => ({
     id: labor.id,

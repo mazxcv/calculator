@@ -16,7 +16,7 @@
             style="position: relative; display: flex; justify-content: space-between"
           >
             <v-row>
-              <v-col style="display: flex; align-items: center" cols="9">
+              <v-col style="display: flex; align-items: center" cols="5">
                 <div class="text-medium">Этап {{i + 1}}</div>
                 <dialog-add-works
                   class="ml-2 mb-1"
@@ -48,7 +48,23 @@
                   сохранить
                 </v-btn>
               </v-col>
-              <v-col cols="3" style="display: flex; align-items: center; justify-content: flex-end">
+              <v-col cols="7" style="display: flex; align-items: center; justify-content: flex-end">
+                <div class="ml-2 mr-2">
+                  <date-input
+                    title="Действует с:"
+                    :value="item.dateFrom"
+                    :stageIndex="i"
+                    @changeDate="changeDateFrom"
+                  />
+                </div>
+                <div class="ml-2 mr-2">
+                  <date-input
+                    title="Действует по:"
+                    :value="item.dateTo"
+                    :stageIndex="i"
+                    @changeDate="changeDateTo"
+                  />
+                </div>
                 <v-chip class="text-medium" outlined color="success">
                   <v-avatar left>
                     <v-icon>mdi-cash-multiple</v-icon>
@@ -68,7 +84,7 @@
               </v-col>
             </v-row>
           </v-card-title>
-          <v-card-text >
+          <v-card-text>
             <div v-if="item.laborVolumes[0]">
               <v-expansion-panels
                 flat
@@ -252,6 +268,7 @@
 <script>
 import DialogAddWorks from '../minor/DialogAddWorks.vue';
 import NoveltyRate from './NoveltyRate.vue';
+import DateInput from '../minor/DateInput.vue';
 import { sortListInnovationRate, compare } from '../../utils/helpers';
 
 export default {
@@ -265,16 +282,23 @@ export default {
   components: {
     DialogAddWorks,
     NoveltyRate,
+    DateInput,
   },
   data() {
     return {
       valid: true,
       stages: this.data.nir ? this.data.nir.stages : [],
+      modifiedDate: '',
     };
   },
   computed: {
     comparison() {
-      return compare(this.data.nir.stages, this.data.nirStages, this.data.nir.volume);
+      return compare(
+        this.data.nir.stages,
+        this.data.nirStages,
+        this.data.nir.volume,
+        this.modifiedDate,
+      );
     },
     sortListLabor() {
       return sortListInnovationRate(this.data.listNirInnovationRate);
@@ -296,6 +320,14 @@ export default {
     },
   },
   methods: {
+    changeDateFrom(data) {
+      this.data.nir.stages[data.stageIndex].dateFrom = data.date;
+      this.modifiedDate = data.date;
+    },
+    changeDateTo(data) {
+      this.data.nir.stages[data.stageIndex].dateTo = data.date;
+      this.modifiedDate = data.date;
+    },
     addInnovationRateStage(item, stageId) {
       this.data.nir.stages[stageId].nirInnovationRateID = item.id;
       this.data.nir.stages[stageId].nirInnovationRateValue = item.value;
@@ -324,8 +356,8 @@ export default {
           code: index,
           name: `Этап ${index}`,
           nirInnovationRateID: payload.nirInnovationRateID,
-          dateFrom: new Date(),
-          dateTo: new Date(),
+          dateFrom: payload.dateFrom,
+          dateTo: payload.dateTo,
           nirID: this.data.nirId,
           laborVolumes: payload.laborVolumes.map((el) => ({
             laborID: el.labor.id,
@@ -335,9 +367,13 @@ export default {
       }
     },
     addStage() {
+      const d = new Date();
       this.data.nir.stages = [
         ...this.data.nir.stages,
         {
+          dateFrom: d.toISOString().substr(0, 10),
+          dateTo: new Date((d.getFullYear() + 1).toString(),
+            d.getMonth().toString()).toISOString().substr(0, 10),
           laborVolumes: [],
           nirInnovationRateID: null,
           nirInnovationRateValue: 0,

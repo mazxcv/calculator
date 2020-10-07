@@ -113,7 +113,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .bar {
   height: 100vh;
   position: sticky;
