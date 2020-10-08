@@ -119,6 +119,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import { mapActions, mapGetters } from 'vuex';
 import sortListInnovationRate from '../../utils/helpers';
 
@@ -128,17 +129,17 @@ export default {
     this.GET_LIST_NIR_INNOVATION_RATE();
   },
   data() {
-    const d = new Date();
+    const date = new Date();
+    const firstDate = new Date();
+    const lastDate = date.setFullYear(date.getFullYear() + 1);
     return {
       valid: true,
       name: '',
       duration: 12,
       menuFrom: false,
       menuTo: false,
-      dateFrom: d.toISOString().substr(0, 10),
-      year: d.getMonth(),
-      dateTo: new Date((d.getFullYear() + 1).toString(),
-        d.getMonth().toString()).toISOString().substr(0, 10),
+      dateFrom: firstDate.toISOString().substr(0, 10),
+      dateTo: moment(lastDate).format('YYYY-MM-DD'),
       dialog: false,
     };
   },

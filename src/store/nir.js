@@ -27,8 +27,8 @@ export default {
     SET_NIR_CURRENT: (state, nir) => {
       const modStages = nir.stages ? nir.stages.map((stage) => ({
         ...stage,
-        dateFrom: moment(stage.dateFrom).format('YYYY-DD-MM'),
-        dateTo: moment(stage.dateTo).format('YYYY-DD-MM'),
+        dateFrom: moment(stage.dateFrom).format('YYYY-MM-DD'),
+        dateTo: moment(stage.dateTo).format('YYYY-MM-DD'),
         laborVolumes: stage.laborVolumes.map((el) => ({
           ...el,
           labor: {
@@ -41,11 +41,12 @@ export default {
       if (nir.stages[0]) {
         state.currentNir = { ...nir, stages: modStages };
       } else {
-        const d = new Date();
+        const date = new Date();
+        const firstDate = new Date();
+        const lastDate = date.setFullYear(date.getFullYear() + 1);
         const stages = [{
-          dateFrom: d.toISOString().substr(0, 10),
-          dateTo: new Date((d.getFullYear() + 1).toString(),
-            d.getMonth().toString()).toISOString().substr(0, 10),
+          dateFrom: firstDate.toISOString().substr(0, 10),
+          dateTo: moment(lastDate).format('YYYY-MM-DD'),
           laborVolumes: [],
           nirInnovationRateID: null,
           nirInnovationRateValue: 0,

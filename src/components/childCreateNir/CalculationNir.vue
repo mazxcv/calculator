@@ -266,6 +266,7 @@
 </template>
 
 <script>
+import moment from 'moment';
 import DialogAddWorks from '../minor/DialogAddWorks.vue';
 import NoveltyRate from './NoveltyRate.vue';
 import DateInput from '../minor/DateInput.vue';
@@ -335,9 +336,9 @@ export default {
     colorSlider(maxValue, value) {
       return value > maxValue ? 'error' : 'primary';
     },
-    saveStage(payload, index) {
+    async saveStage(payload, index) {
       if (payload.id) {
-        this.actions.saveStage({
+        await this.actions.saveStage({
           code: payload.code,
           name: payload.name,
           id: payload.id,
@@ -352,7 +353,7 @@ export default {
           })),
         });
       } else {
-        this.actions.addStage({
+        await this.actions.addStage({
           code: index,
           name: `Этап ${index}`,
           nirInnovationRateID: payload.nirInnovationRateID,
@@ -365,15 +366,17 @@ export default {
           })),
         });
       }
+      this.actions.getNirCurrent(this.data.nirId);
     },
     addStage() {
-      const d = new Date();
+      const date = new Date();
+      const firstDate = new Date();
+      const lastDate = date.setFullYear(date.getFullYear() + 1);
       this.data.nir.stages = [
         ...this.data.nir.stages,
         {
-          dateFrom: d.toISOString().substr(0, 10),
-          dateTo: new Date((d.getFullYear() + 1).toString(),
-            d.getMonth().toString()).toISOString().substr(0, 10),
+          dateFrom: firstDate.toISOString().substr(0, 10),
+          dateTo: moment(lastDate).format('YYYY-MM-DD'),
           laborVolumes: [],
           nirInnovationRateID: null,
           nirInnovationRateValue: 0,

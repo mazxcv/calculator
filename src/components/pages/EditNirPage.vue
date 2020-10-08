@@ -14,6 +14,7 @@
         addStage: ADD_NIR_STAGE,
         saveStage: SAVE_NIR_STAGE,
         deleteStage: DELETE_NIR_STAGE,
+        getNirCurrent: GET_NIR_CURRENT,
       }"
     />
   </div>
